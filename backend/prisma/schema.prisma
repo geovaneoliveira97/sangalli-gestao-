@@ -1,0 +1,292 @@
+// AutoControl — Oficina Mecânica e Funilaria
+// Schema Prisma — MySQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================================
+// ENUMS
+// ==========================================================
+
+enum UserRole {
+  ADMIN
+  ATENDENTE
+  MECANICO
+}
+
+enum WorkOrderStatus {
+  EM_DIAGNOSTICO
+  AGUARDANDO_APROVACAO
+  EM_MANUTENCAO
+  EM_FUNILARIA
+  EM_PINTURA
+  EM_TESTE
+  PRONTO
+  ENTREGUE
+  CANCELADO
+}
+
+enum PhotoCategory {
+  ENTRADA
+  DURANTE
+  FINALIZACAO
+}
+
+enum PaymentMethod {
+  DINHEIRO
+  PIX
+  CARTAO_CREDITO
+  CARTAO_DEBITO
+  BOLETO
+  TRANSFERENCIA
+}
+
+// ==========================================================
+// USUÁRIOS (funcionários da oficina)
+// ==========================================================
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         UserRole @default(ATENDENTE)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  statusChanges WorkOrderStatusHistory[]
+  photosAdded   WorkOrderPhoto[]
+
+  @@map("users")
+}
+
+// ==========================================================
+// CLIENTES
+// ==========================================================
+
+model Client {
+  id        String   @id @default(uuid())
+  name      String
+  cpf       String   @unique
+  phone     String
+  whatsapp  String?
+  email     String?
+  zipCode   String?  @map("zip_code")
+  street    String?
+  number    String?
+  district  String?
+  city      String?
+  state     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  vehicles   Vehicle[]
+  workOrders WorkOrder[]
+
+  @@index([name])
+  @@map("clients")
+}
+
+// ==========================================================
+// VEÍCULOS
+// ==========================================================
+
+model Vehicle {
+  id        String   @id @default(uuid())
+  clientId  String   @map("client_id")
+  plate     String   @unique
+  brand     String
+  model     String
+  year      Int
+  color     String
+  mileage   Int      @default(0)
+  notes     String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  client     Client      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  workOrders WorkOrder[]
+
+  @@index([clientId])
+  @@map("vehicles")
+}
+
+// ==========================================================
+// SERVIÇOS (catálogo)
+// ==========================================================
+
+model Service {
+  id           String   @id @default(uuid())
+  name         String
+  description  String?  @db.Text
+  defaultPrice Decimal  @map("default_price") @db.Decimal(10, 2)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  workOrderServices WorkOrderService[]
+
+  @@map("services")
+}
+
+// ==========================================================
+// PEÇAS (catálogo / estoque)
+// ==========================================================
+
+model Part {
+  id           String   @id @default(uuid())
+  name         String
+  code         String   @unique
+  manufacturer String?
+  price        Decimal  @db.Decimal(10, 2)
+  stock        Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  workOrderParts WorkOrderPart[]
+
+  @@map("parts")
+}
+
+// ==========================================================
+// ORDEM DE SERVIÇO
+// ==========================================================
+
+model WorkOrder {
+  id                String          @id @default(uuid())
+  number            Int             @unique @default(autoincrement())
+  clientId          String          @map("client_id")
+  vehicleId         String          @map("vehicle_id")
+  problemDescription String         @map("problem_description") @db.Text
+  diagnosis         String?         @db.Text
+  status            WorkOrderStatus @default(EM_DIAGNOSTICO)
+  entryDate         DateTime        @default(now()) @map("entry_date")
+  estimatedDelivery DateTime?       @map("estimated_delivery")
+  completedAt       DateTime?       @map("completed_at")
+  laborCost         Decimal         @default(0) @map("labor_cost") @db.Decimal(10, 2)
+  internalNotes     String?         @map("internal_notes") @db.Text
+  publicNotes       String?         @map("public_notes") @db.Text
+  publicToken       String          @unique @default(uuid()) @map("public_token")
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+
+  client   Client  @relation(fields: [clientId], references: [id])
+  vehicle  Vehicle @relation(fields: [vehicleId], references: [id])
+
+  services       WorkOrderService[]
+  parts          WorkOrderPart[]
+  photos         WorkOrderPhoto[]
+  payments       Payment[]
+  statusHistory  WorkOrderStatusHistory[]
+
+  @@index([clientId])
+  @@index([vehicleId])
+  @@index([status])
+  @@index([publicToken])
+  @@map("work_orders")
+}
+
+// ==========================================================
+// ORDEM DE SERVIÇO x SERVIÇOS (N:N com dados extras)
+// ==========================================================
+
+model WorkOrderService {
+  id          String   @id @default(uuid())
+  workOrderId String   @map("work_order_id")
+  serviceId   String   @map("service_id")
+  price       Decimal  @db.Decimal(10, 2)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  workOrder WorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  service   Service   @relation(fields: [serviceId], references: [id])
+
+  @@index([workOrderId])
+  @@index([serviceId])
+  @@map("work_order_services")
+}
+
+// ==========================================================
+// ORDEM DE SERVIÇO x PEÇAS (N:N com dados extras)
+// ==========================================================
+
+model WorkOrderPart {
+  id          String   @id @default(uuid())
+  workOrderId String   @map("work_order_id")
+  partId      String   @map("part_id")
+  quantity    Int      @default(1)
+  unitPrice   Decimal  @map("unit_price") @db.Decimal(10, 2)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  workOrder WorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  part      Part      @relation(fields: [partId], references: [id])
+
+  @@index([workOrderId])
+  @@index([partId])
+  @@map("work_order_parts")
+}
+
+// ==========================================================
+// FOTOS (metadados — arquivo fica no Cloudinary)
+// ==========================================================
+
+model WorkOrderPhoto {
+  id          String        @id @default(uuid())
+  workOrderId String        @map("work_order_id")
+  url         String        @db.Text
+  publicId    String        @map("public_id")
+  category    PhotoCategory
+  caption     String?
+  addedById   String?       @map("added_by_id")
+  createdAt   DateTime      @default(now()) @map("created_at")
+
+  workOrder WorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  addedBy   User?     @relation(fields: [addedById], references: [id])
+
+  @@index([workOrderId])
+  @@map("work_order_photos")
+}
+
+// ==========================================================
+// HISTÓRICO DE STATUS (timeline)
+// ==========================================================
+
+model WorkOrderStatusHistory {
+  id          String          @id @default(uuid())
+  workOrderId String          @map("work_order_id")
+  status      WorkOrderStatus
+  note        String?         @db.Text
+  userId      String?         @map("user_id")
+  createdAt   DateTime        @default(now()) @map("created_at")
+
+  workOrder WorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  user      User?     @relation(fields: [userId], references: [id])
+
+  @@index([workOrderId])
+  @@map("work_order_status_history")
+}
+
+// ==========================================================
+// PAGAMENTOS
+// ==========================================================
+
+model Payment {
+  id          String        @id @default(uuid())
+  workOrderId String        @map("work_order_id")
+  amount      Decimal       @db.Decimal(10, 2)
+  method      PaymentMethod
+  paidAt      DateTime      @default(now()) @map("paid_at")
+  notes       String?
+
+  workOrder WorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+
+  @@index([workOrderId])
+  @@map("payments")
+}
