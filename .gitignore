@@ -29,6 +29,9 @@ coverage/
 backend/prisma/dev.db
 backend/prisma/dev.db-journal
 
+# Claude Code local session state
+.claude/
+
 # Editor / OS
 .vscode/*
 !.vscode/extensions.json
