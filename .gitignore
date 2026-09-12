@@ -45,3 +45,6 @@ Thumbs.db
 
 # PWA generated
 frontend/dev-dist/
+
+# Material da faculdade (fica só local, não no repositório público)
+docs/

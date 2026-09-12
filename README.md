@@ -207,12 +207,12 @@ cd autocontrol
 # Backend
 cd backend
 npm install
-cp .env.example .env   # preencha DATABASE_URL, JWT_SECRET e, opcionalmente, Cloudinary
+# crie um arquivo .env com as variáveis listadas em "Variáveis de ambiente" abaixo
 
 # Frontend
 cd ../frontend
 npm install
-cp .env.example .env   # ajuste VITE_API_URL se necessário
+# crie um arquivo .env com VITE_API_URL (veja "Variáveis de ambiente" abaixo)
 ```
 
 ### Banco de dados (Supabase)
@@ -246,13 +246,14 @@ FRONTEND_URL="http://localhost:5173"
 O upload de fotos só funciona com credenciais Cloudinary válidas (gratuitas em
 [cloudinary.com](https://cloudinary.com)); o restante do sistema funciona normalmente sem elas.
 
-**`frontend/.env`** (veja `frontend/.env.example`):
+**`frontend/.env`**:
 
 ```text
 VITE_API_URL=http://localhost:3333/api
 ```
 
-Nenhum segredo é commitado no repositório — apenas os arquivos `.env.example`.
+Nenhum segredo é commitado no repositório — os arquivos `.env` de cada pacote ficam só na
+máquina local (ou nas variáveis de ambiente configuradas diretamente no Render/Netlify).
 
 ## Executando o backend
 
