@@ -19,7 +19,7 @@
     # em index.html (indicador de carregamento inicial) — se o conteúdo
     # desse bloco mudar, o hash precisa ser recalculado (ver comentário no
     # próprio index.html).
-    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'sha256-XtzU1VbaW6ghgGyxiFE8NcQZSIT0X1Ds++qRxWjEnEY='; img-src 'self' data: blob: https://res.cloudinary.com; connect-src 'self' https:; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'sha256-pBK851jlDmsgzCErlDi96u4l3YiariJKk5yxOJFa0X8='; img-src 'self' data: blob: https://res.cloudinary.com; connect-src 'self' https:; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
 
 # O service worker do PWA não pode ser cacheado por muito tempo
