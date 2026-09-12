@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'manifest.json'],
+      includeAssets: ['pwa-192x192.png', 'pwa-512x512.png', 'manifest.json'],
       // O manifest é mantido como arquivo estático em public/manifest.json
       // (requisito de estrutura do projeto) e referenciado manualmente no index.html.
       manifest: false,
