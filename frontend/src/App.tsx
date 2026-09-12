@@ -35,28 +35,22 @@ export default function App() {
               <Route element={<AppLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
 
-                <Route element={<ProtectedRoute roles={['ADMIN', 'ATENDENTE']} />}>
-                  <Route path="/clientes" element={<ClientsPage />} />
-                  <Route path="/clientes/:id" element={<ClientDetailPage />} />
-                  <Route path="/veiculos" element={<VehiclesPage />} />
-                  <Route path="/veiculos/:id" element={<VehicleDetailPage />} />
-                  <Route path="/financeiro" element={<FinancePage />} />
-                  <Route path="/relatorios" element={<ReportsPage />} />
-                </Route>
+                <Route path="/clientes" element={<ClientsPage />} />
+                <Route path="/clientes/:id" element={<ClientDetailPage />} />
+                <Route path="/veiculos" element={<VehiclesPage />} />
+                <Route path="/veiculos/:id" element={<VehicleDetailPage />} />
+                <Route path="/financeiro" element={<FinancePage />} />
+                <Route path="/relatorios" element={<ReportsPage />} />
 
                 <Route path="/ordens" element={<WorkOrdersPage />} />
                 <Route path="/ordens/:id" element={<WorkOrderDetailPage />} />
-                <Route element={<ProtectedRoute roles={['ADMIN', 'ATENDENTE']} />}>
-                  <Route path="/ordens/nova" element={<NewWorkOrderPage />} />
-                </Route>
+                <Route path="/ordens/nova" element={<NewWorkOrderPage />} />
 
                 <Route path="/servicos" element={<ServicesPage />} />
                 <Route path="/pecas" element={<PartsPage />} />
                 <Route path="/configuracoes" element={<SettingsPage />} />
 
-                <Route element={<ProtectedRoute roles={['ADMIN']} />}>
-                  <Route path="/usuarios" element={<UsersPage />} />
-                </Route>
+                <Route path="/usuarios" element={<UsersPage />} />
               </Route>
             </Route>
 

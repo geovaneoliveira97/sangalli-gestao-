@@ -22,8 +22,8 @@ const ICONS: Record<ToastType, typeof CheckCircle2> = {
 };
 
 const STYLES: Record<ToastType, string> = {
-  success: 'bg-emerald-600 text-white',
-  error: 'bg-red-600 text-white',
+  success: 'bg-status-success text-white',
+  error: 'bg-status-danger text-white',
   info: 'bg-slate-800 text-white',
 };
 
@@ -61,7 +61,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             <div
               key={toast.id}
               role="status"
-              className={`flex items-start gap-3 rounded-lg px-4 py-3 shadow-lg ${STYLES[toast.type]}`}
+              className={`flex items-start gap-3 rounded px-4 py-3 shadow-flyout ${STYLES[toast.type]}`}
             >
               <Icon size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
               <p className="flex-1 text-sm">{toast.message}</p>

@@ -106,6 +106,10 @@ export async function deleteWorkOrderPhoto(id: string, photoId: string): Promise
   await api.delete(`/ordens/${id}/fotos/${photoId}`);
 }
 
+export async function deleteWorkOrder(id: string): Promise<void> {
+  await api.delete(`/ordens/${id}`);
+}
+
 /**
  * O endpoint de QR Code exige autenticação (Bearer token), então a imagem é buscada
  * via axios (que já injeta o header) e convertida em uma Object URL para uso em <img>.

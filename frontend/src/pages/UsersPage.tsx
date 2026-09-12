@@ -5,7 +5,6 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
-import { Select } from '../components/ui/Select';
 import { EmptyState } from '../components/ui/EmptyState';
 import { TableSkeleton } from '../components/ui/Skeleton';
 import { Badge } from '../components/ui/Badge';
@@ -13,10 +12,9 @@ import { createUser, deactivateUser, listUsers, updateUser, type UserInput } fro
 import { getApiErrorMessage } from '../services/api';
 import { useToast } from '../hooks/useToast';
 import { useAuth } from '../hooks/useAuth';
-import { USER_ROLE_LABELS } from '../utils/statusLabels';
 import type { User } from '../types';
 
-const EMPTY: UserInput = { name: '', email: '', password: '', role: 'ATENDENTE' };
+const EMPTY: UserInput = { name: '', email: '', password: '' };
 
 export function UsersPage() {
   const { user: currentUser } = useAuth();
@@ -54,7 +52,7 @@ export function UsersPage() {
 
   function openEdit(user: User) {
     setEditing(user);
-    setValues({ name: user.name, email: user.email, role: user.role, active: user.active, password: '' });
+    setValues({ name: user.name, email: user.email, active: user.active, password: '' });
     setIsModalOpen(true);
   }
 
@@ -99,6 +97,7 @@ export function UsersPage() {
   return (
     <div>
       <PageHeader
+        eyebrow="Gestão"
         title="Usuários"
         description="Gerencie os funcionários com acesso ao sistema."
         action={
@@ -109,7 +108,7 @@ export function UsersPage() {
       />
 
       {error && (
-        <div role="alert" className="mb-4 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
           <AlertCircle size={18} aria-hidden="true" />
           {error}
         </div>
@@ -121,7 +120,7 @@ export function UsersPage() {
             <TableSkeleton rows={5} cols={5} />
           </div>
         ) : users.length === 0 ? (
-          <EmptyState icon={UserCog} title="Nenhum usuário cadastrado" />
+          <EmptyState icon={UserCog} title="Nenhum usuário cadastrado" description="Cadastre os funcionários que terão acesso ao sistema." />
         ) : (
           <div className="table-scroll">
             <table className="w-full text-left text-sm">
@@ -129,7 +128,6 @@ export function UsersPage() {
                 <tr>
                   <th scope="col" className="px-5 py-3">Nome</th>
                   <th scope="col" className="px-5 py-3">E-mail</th>
-                  <th scope="col" className="px-5 py-3">Perfil</th>
                   <th scope="col" className="px-5 py-3">Status</th>
                   <th scope="col" className="px-5 py-3 text-right">Ações</th>
                 </tr>
@@ -139,12 +137,11 @@ export function UsersPage() {
                   <tr key={user.id} className="hover:bg-slate-50">
                     <td className="px-5 py-3 font-medium text-slate-800">{user.name}</td>
                     <td className="px-5 py-3 text-slate-600">{user.email}</td>
-                    <td className="px-5 py-3 text-slate-600">{USER_ROLE_LABELS[user.role]}</td>
                     <td className="px-5 py-3">
                       <Badge
                         className={
                           user.active
-                            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                            ? 'border-status-success/30 bg-status-success-soft text-status-success'
                             : 'border-slate-300 bg-slate-100 text-slate-600'
                         }
                       >
@@ -203,17 +200,6 @@ export function UsersPage() {
             onChange={(e) => setValues((v) => ({ ...v, password: e.target.value }))}
             hint="Mínimo de 6 caracteres."
           />
-          <Select
-            label="Perfil"
-            value={values.role}
-            onChange={(e) => setValues((v) => ({ ...v, role: e.target.value as User['role'] }))}
-          >
-            {Object.entries(USER_ROLE_LABELS).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </Select>
           <div className="flex justify-end gap-3 border-t border-slate-200 pt-4">
             <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>
               Cancelar

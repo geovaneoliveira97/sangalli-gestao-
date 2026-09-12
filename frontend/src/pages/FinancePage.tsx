@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import { AlertCircle, DollarSign, Receipt, TrendingUp } from 'lucide-react';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { PageHeader } from '../components/ui/PageHeader';
-import { Card } from '../components/ui/Card';
+import { SectionCard } from '../components/ui/SectionCard';
 import { StatCard } from '../components/StatCard';
 import { Skeleton } from '../components/ui/Skeleton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { fetchReports } from '../services/reportService';
 import { getApiErrorMessage } from '../services/api';
 import { formatCurrency } from '../utils/format';
-import { CHART_INK, SEQUENTIAL_BLUE } from '../utils/chartColors';
+import { CHART_INK, SEQUENTIAL_ACCENT } from '../utils/chartColors';
 import type { ReportsData } from '../types';
 
 export function FinancePage() {
@@ -27,35 +27,35 @@ export function FinancePage() {
   return (
     <div>
       <PageHeader
+        eyebrow="Financeiro"
         title="Financeiro"
         description="Visão consolidada do faturamento da oficina. Para filtros e mais indicadores, acesse Relatórios."
       />
 
       {error && (
-        <div role="alert" className="mb-4 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
           <AlertCircle size={18} aria-hidden="true" />
           {error}
         </div>
       )}
 
       {isLoading ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-24" />
+            <Skeleton key={i} className="h-16" />
           ))}
         </div>
       ) : (
         data && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <StatCard icon={DollarSign} label="Faturamento total" value={formatCurrency(data.indicators.revenue)} accent="bg-emerald-50 text-emerald-700" />
-            <StatCard icon={Receipt} label="Ticket médio" value={formatCurrency(data.indicators.averageTicket)} accent="bg-amber-50 text-amber-700" />
-            <StatCard icon={TrendingUp} label="OS concluídas" value={data.indicators.completedWorkOrders} accent="bg-blue-50 text-blue-700" />
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <StatCard icon={DollarSign} label="Faturamento total" value={formatCurrency(data.indicators.revenue)} tone="success" />
+            <StatCard icon={Receipt} label="Ticket médio" value={formatCurrency(data.indicators.averageTicket)} tone="warning" />
+            <StatCard icon={TrendingUp} label="OS concluídas" value={data.indicators.completedWorkOrders} tone="info" />
           </div>
         )
       )}
 
-      <Card className="mt-6 p-5">
-        <h2 className="mb-4 text-base font-semibold text-slate-900">Faturamento por mês</h2>
+      <SectionCard className="mt-5" eyebrow="Evolução" title="Faturamento por mês">
         {isLoading ? (
           <Skeleton className="h-64" />
         ) : data && data.charts.revenueByMonth.some((m) => m.total > 0) ? (
@@ -65,14 +65,13 @@ export function FinancePage() {
               <XAxis dataKey="month" stroke={CHART_INK.muted} fontSize={12} tickLine={false} />
               <YAxis stroke={CHART_INK.muted} fontSize={12} tickFormatter={(v) => formatCurrency(v)} width={90} />
               <Tooltip formatter={(value: number) => formatCurrency(value)} />
-              <Line type="monotone" dataKey="total" name="Faturamento" stroke={SEQUENTIAL_BLUE} strokeWidth={2} dot={{ r: 4 }} />
+              <Line type="monotone" dataKey="total" name="Faturamento" stroke={SEQUENTIAL_ACCENT} strokeWidth={2} dot={{ r: 4 }} />
             </LineChart>
           </ResponsiveContainer>
         ) : (
-          <EmptyState icon={DollarSign} title="Sem faturamento registrado ainda" />
+          <EmptyState icon={DollarSign} title="Sem faturamento registrado ainda" description="Assim que houver pagamentos registrados, o gráfico aparece aqui." />
         )}
-      </Card>
+      </SectionCard>
     </div>
   );
 }
-

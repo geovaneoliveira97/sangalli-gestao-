@@ -4,14 +4,12 @@ export const createUserSchema = z.object({
   name: z.string().min(2, 'Informe o nome completo.'),
   email: z.string().email('Informe um e-mail válido.'),
   password: z.string().min(6, 'A senha deve ter ao menos 6 caracteres.'),
-  role: z.enum(['ADMIN', 'ATENDENTE', 'MECANICO']),
 });
 
 export const updateUserSchema = z.object({
   name: z.string().min(2).optional(),
   email: z.string().email().optional(),
   password: z.string().min(6).optional(),
-  role: z.enum(['ADMIN', 'ATENDENTE', 'MECANICO']).optional(),
   active: z.boolean().optional(),
 });
 

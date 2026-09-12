@@ -16,7 +16,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         <label htmlFor={textareaId} className="text-sm font-medium text-slate-700">
           {label}
           {required && (
-            <span className="text-red-600" aria-hidden="true">
+            <span className="text-status-danger" aria-hidden="true">
               {' '}
               *
             </span>
@@ -29,13 +29,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           aria-invalid={Boolean(error)}
           aria-describedby={error ? errorId : undefined}
           rows={3}
-          className={`w-full rounded-lg border px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 ${
-            error ? 'border-red-400 focus:border-red-500' : 'border-slate-300 focus:border-brand-600'
+          className={`w-full rounded border px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 ${
+            error ? 'border-status-danger focus:border-status-danger' : 'border-slate-300 focus:border-brand-600'
           } ${className}`}
           {...props}
         />
         {error && (
-          <p id={errorId} className="text-xs font-medium text-red-600" role="alert">
+          <p id={errorId} className="text-xs font-medium text-status-danger" role="alert">
             {error}
           </p>
         )}

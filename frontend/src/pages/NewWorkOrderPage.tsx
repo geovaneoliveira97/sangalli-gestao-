@@ -98,7 +98,7 @@ export function NewWorkOrderPage() {
         <ArrowLeft size={16} /> Voltar para ordens de serviço
       </button>
 
-      <PageHeader title="Nova Ordem de Serviço" description="Registre a entrada de um veículo na oficina." />
+      <PageHeader eyebrow="Operação" title="Nova Ordem de Serviço" description="Registre a entrada de um veículo na oficina." />
 
       <Card className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
@@ -169,7 +169,7 @@ export function NewWorkOrderPage() {
           />
 
           {error && (
-            <div role="alert" className="flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+            <div role="alert" className="flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
               <AlertCircle size={18} aria-hidden="true" />
               {error}
             </div>

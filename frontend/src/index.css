@@ -13,13 +13,19 @@
 
   body {
     @apply bg-slate-50 text-slate-900 antialiased;
+    font-feature-settings: 'cv05', 'ss01';
+  }
+
+  /* Números tabulares para placas, valores e códigos de OS — colunas alinham. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
   }
 
   /* Foco visível para navegação por teclado (acessibilidade) */
   :focus-visible {
-    outline: 2px solid #2563eb;
+    outline: 2px solid #984E1A;
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 3px;
   }
 
   /* Rolagem horizontal para tabelas em telas pequenas, sem vazar da página */
@@ -30,6 +36,13 @@
 
 @layer components {
   .skip-link {
-    @apply sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-brand-900 focus:px-4 focus:py-2 focus:text-white;
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-slate-950 focus:px-4 focus:py-2 focus:text-white;
+  }
+
+  /* Rótulo técnico em caixa alta usado para seções, kickers e metadados
+     (ex.: "IDENTIFICAÇÃO DO VEÍCULO", "STATUS ATUAL"). Reaproveitado em
+     PageHeader, SectionCard e nas etiquetas de status. */
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.08em] text-slate-500;
   }
 }

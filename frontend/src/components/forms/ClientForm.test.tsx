@@ -30,14 +30,18 @@ describe('ClientForm (cadastro de cliente)', () => {
     render(<ClientForm onSubmit={onSubmit} onCancel={vi.fn()} />);
 
     await user.type(screen.getByLabelText(/nome completo/i), 'Maria Oliveira Santos');
-    await user.type(screen.getByLabelText(/^cpf/i), '11122233344');
     await user.type(screen.getByLabelText(/^telefone/i), '11987654321');
     await user.click(screen.getByRole('button', { name: /salvar cliente/i }));
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
     const payload = onSubmit.mock.calls[0][0];
     expect(payload.name).toBe('Maria Oliveira Santos');
-    expect(payload.cpf).toBe('111.222.333-44');
+    expect(payload.cpf).toBeUndefined();
+  });
+
+  it('não exibe campo de CPF (dado sensível não coletado pelo sistema)', () => {
+    render(<ClientForm onSubmit={vi.fn()} onCancel={vi.fn()} />);
+    expect(screen.queryByLabelText(/^cpf/i)).not.toBeInTheDocument();
   });
 
   it('preenche o endereço automaticamente ao buscar um CEP válido', async () => {

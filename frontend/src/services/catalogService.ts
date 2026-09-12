@@ -19,8 +19,15 @@ export async function updateService(id: string, input: Partial<ServiceInput>): P
   return data;
 }
 
-export async function deleteService(id: string): Promise<void> {
-  await api.delete(`/servicos/${id}`);
+export interface DeleteCatalogItemResult {
+  deleted: boolean;
+  deactivated: boolean;
+  usageCount?: number;
+}
+
+export async function deleteService(id: string): Promise<DeleteCatalogItemResult> {
+  const { data } = await api.delete<DeleteCatalogItemResult>(`/servicos/${id}`);
+  return data;
 }
 
 export async function listParts(params?: { onlyActive?: boolean; search?: string }): Promise<Part[]> {
@@ -40,6 +47,7 @@ export async function updatePart(id: string, input: Partial<PartInput>): Promise
   return data;
 }
 
-export async function deletePart(id: string): Promise<void> {
-  await api.delete(`/pecas/${id}`);
+export async function deletePart(id: string): Promise<DeleteCatalogItemResult> {
+  const { data } = await api.delete<DeleteCatalogItemResult>(`/pecas/${id}`);
+  return data;
 }

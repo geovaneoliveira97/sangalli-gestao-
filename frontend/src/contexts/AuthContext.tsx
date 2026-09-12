@@ -9,7 +9,6 @@ interface AuthContextValue {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  hasRole: (...roles: User['role'][]) => boolean;
 }
 
 export const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -47,14 +46,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
-  const hasRole = useCallback(
-    (...roles: User['role'][]) => (user ? roles.includes(user.role) : false),
-    [user],
-  );
-
   const value = useMemo(
-    () => ({ user, token, isAuthenticated: Boolean(token), isLoading, login, logout, hasRole }),
-    [user, token, isLoading, login, logout, hasRole],
+    () => ({ user, token, isAuthenticated: Boolean(token), isLoading, login, logout }),
+    [user, token, isLoading, login, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

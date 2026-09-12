@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import prisma from '../utils/prisma';
 import { asyncHandler } from '../utils/asyncHandler';
 import { createVehicleSchema, updateVehicleSchema } from '../validators/vehicleValidators';
-import { NotFoundError } from '../utils/AppError';
+import { ConflictError, NotFoundError } from '../utils/AppError';
 
 export const listVehicles = asyncHandler(async (req: Request, res: Response) => {
   const clientId = typeof req.query.clientId === 'string' ? req.query.clientId : undefined;
@@ -63,6 +63,16 @@ export const updateVehicle = asyncHandler(async (req: Request, res: Response) =>
 export const deleteVehicle = asyncHandler(async (req: Request, res: Response) => {
   const existing = await prisma.vehicle.findUnique({ where: { id: req.params.id } });
   if (!existing) throw new NotFoundError('Veículo não encontrado.');
+
+  // Ordens de serviço não são removidas em cascata junto com o veículo
+  // (precisam ser preservadas como histórico/comprovante).
+  const linkedWorkOrders = await prisma.workOrder.count({ where: { vehicleId: existing.id } });
+  if (linkedWorkOrders > 0) {
+    const noun = linkedWorkOrders === 1 ? 'ordem de serviço registrada' : 'ordens de serviço registradas';
+    throw new ConflictError(
+      `Não é possível remover este veículo: há ${linkedWorkOrders} ${noun} para ele. Ordens de serviço existentes precisam ser preservadas como histórico.`,
+    );
+  }
 
   await prisma.vehicle.delete({ where: { id: req.params.id } });
   return res.status(204).send();

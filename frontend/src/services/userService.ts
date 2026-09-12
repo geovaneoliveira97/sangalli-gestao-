@@ -5,7 +5,6 @@ export interface UserInput {
   name: string;
   email: string;
   password?: string;
-  role: User['role'];
   active?: boolean;
 }
 

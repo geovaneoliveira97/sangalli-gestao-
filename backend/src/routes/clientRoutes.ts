@@ -6,7 +6,7 @@ import {
   listClients,
   updateClient,
 } from '../controllers/clientController';
-import { authenticate, authorize } from '../middlewares/auth';
+import { authenticate } from '../middlewares/auth';
 
 const router = Router();
 
@@ -14,8 +14,8 @@ router.use(authenticate);
 
 router.get('/', listClients);
 router.get('/:id', getClient);
-router.post('/', authorize('ADMIN', 'ATENDENTE'), createClient);
-router.put('/:id', authorize('ADMIN', 'ATENDENTE'), updateClient);
-router.delete('/:id', authorize('ADMIN'), deleteClient);
+router.post('/', createClient);
+router.put('/:id', updateClient);
+router.delete('/:id', deleteClient);
 
 export default router;

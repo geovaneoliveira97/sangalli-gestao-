@@ -2,7 +2,15 @@ import { z } from 'zod';
 
 export const createClientSchema = z.object({
   name: z.string().min(2, 'Informe o nome completo.'),
-  cpf: z.string().min(11, 'CPF inválido.').max(14, 'CPF inválido.'),
+  // CPF é opcional por padrão: o sistema não exige esse dado sensível do
+  // cliente. Quando informado, ainda validamos o formato.
+  cpf: z
+    .string()
+    .min(11, 'CPF inválido.')
+    .max(14, 'CPF inválido.')
+    .optional()
+    .nullable()
+    .or(z.literal('')),
   phone: z.string().min(8, 'Informe um telefone válido.'),
   whatsapp: z.string().optional().nullable(),
   email: z.string().email('E-mail inválido.').optional().nullable().or(z.literal('')),

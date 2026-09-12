@@ -5,13 +5,11 @@ import prisma from '../src/utils/prisma';
 
 describe('CRUD de clientes', () => {
   let adminToken: string;
-  let mecanicoToken: string;
   let createdId: string;
   const cpf = `999${Date.now().toString().slice(-8)}`;
 
   beforeAll(async () => {
     adminToken = await loginAs(CREDENTIALS.admin);
-    mecanicoToken = await loginAs(CREDENTIALS.mecanico);
   });
 
   afterAll(async () => {
@@ -33,6 +31,20 @@ describe('CRUD de clientes', () => {
     expect(response.status).toBe(201);
     expect(response.body.id).toBeDefined();
     createdId = response.body.id;
+  });
+
+  it('cria um cliente sem informar CPF (dado sensível não é obrigatório)', async () => {
+    const response = await request(app)
+      .post('/api/clientes')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        name: 'Cliente Sem CPF',
+        phone: '(11) 90000-0002',
+      });
+
+    expect(response.status).toBe(201);
+    expect(response.body.cpf).toBeNull();
+    await prisma.client.deleteMany({ where: { id: response.body.id } });
   });
 
   it('rejeita cliente sem nome', async () => {
@@ -64,15 +76,6 @@ describe('CRUD de clientes', () => {
     expect(response.body.phone).toBe('(11) 91111-1111');
   });
 
-  it('impede mecânico de criar cliente (controle de permissões)', async () => {
-    const response = await request(app)
-      .post('/api/clientes')
-      .set('Authorization', `Bearer ${mecanicoToken}`)
-      .send({ name: 'Não deveria criar', cpf: '22222222222', phone: '11988887777' });
-
-    expect(response.status).toBe(403);
-  });
-
   it('remove um cliente', async () => {
     const response = await request(app)
       .delete(`/api/clientes/${createdId}`)
@@ -80,5 +83,69 @@ describe('CRUD de clientes', () => {
 
     expect(response.status).toBe(204);
     createdId = '';
+  });
+});
+
+describe('remoção de cliente com histórico', () => {
+  let adminToken: string;
+  let clientId: string;
+  let vehicleId: string;
+  let workOrderId: string;
+
+  beforeAll(async () => {
+    adminToken = await loginAs(CREDENTIALS.admin);
+
+    const clientResponse = await request(app)
+      .post('/api/clientes')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        name: 'Cliente Com Histórico',
+        cpf: `998${Date.now().toString().slice(-8)}`,
+        phone: '(11) 90000-0001',
+      });
+    clientId = clientResponse.body.id;
+
+    const vehicleResponse = await request(app)
+      .post('/api/veiculos')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        clientId,
+        plate: `TST${Date.now().toString().slice(-4)}`,
+        brand: 'Fiat',
+        model: 'Uno',
+        year: 2020,
+        color: 'Branco',
+      });
+    vehicleId = vehicleResponse.body.id;
+
+    const workOrderResponse = await request(app)
+      .post('/api/ordens')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ clientId, vehicleId, problemDescription: 'Barulho no motor' });
+    workOrderId = workOrderResponse.body.id;
+  });
+
+  afterAll(async () => {
+    await prisma.workOrder.deleteMany({ where: { id: workOrderId } });
+    await prisma.vehicle.deleteMany({ where: { id: vehicleId } });
+    await prisma.client.deleteMany({ where: { id: clientId } });
+  });
+
+  it('recusa remover um veículo com ordem de serviço, com mensagem explicativa', async () => {
+    const response = await request(app)
+      .delete(`/api/veiculos/${vehicleId}`)
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(response.status).toBe(409);
+    expect(response.body.error).toMatch(/ordem de serviço/i);
+  });
+
+  it('recusa remover um cliente com ordem de serviço, com mensagem explicativa', async () => {
+    const response = await request(app)
+      .delete(`/api/clientes/${clientId}`)
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(response.status).toBe(409);
+    expect(response.body.error).toMatch(/ordem de serviço/i);
   });
 });

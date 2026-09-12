@@ -1,5 +1,5 @@
 import { PageHeader } from '../components/ui/PageHeader';
-import { Card } from '../components/ui/Card';
+import { SectionCard } from '../components/ui/SectionCard';
 import { useAuth } from '../hooks/useAuth';
 import { USER_ROLE_LABELS } from '../utils/statusLabels';
 import { API_URL } from '../services/api';
@@ -9,10 +9,9 @@ export function SettingsPage() {
 
   return (
     <div className="max-w-2xl">
-      <PageHeader title="Configurações" description="Informações da sua conta e do sistema." />
+      <PageHeader eyebrow="Gestão" title="Configurações" description="Informações da sua conta e do sistema." />
 
-      <Card className="mb-6 p-5">
-        <h2 className="mb-4 text-base font-semibold text-slate-900">Minha conta</h2>
+      <SectionCard className="mb-5" eyebrow="Acesso" title="Minha conta">
         <dl className="space-y-2 text-sm">
           <div className="flex justify-between">
             <dt className="text-slate-500">Nome</dt>
@@ -20,7 +19,7 @@ export function SettingsPage() {
           </div>
           <div className="flex justify-between">
             <dt className="text-slate-500">E-mail</dt>
-            <dd className="font-medium text-slate-800">{user?.email}</dd>
+            <dd className="font-mono text-xs font-medium text-slate-800">{user?.email}</dd>
           </div>
           <div className="flex justify-between">
             <dt className="text-slate-500">Perfil</dt>
@@ -31,21 +30,20 @@ export function SettingsPage() {
           Para alterar dados de outros usuários ou seu perfil de acesso, peça a um administrador em{' '}
           <span className="font-medium">Usuários</span>.
         </p>
-      </Card>
+      </SectionCard>
 
-      <Card className="p-5">
-        <h2 className="mb-4 text-base font-semibold text-slate-900">Sobre o sistema</h2>
+      <SectionCard eyebrow="Ambiente" title="Sobre o sistema">
         <dl className="space-y-2 text-sm">
           <div className="flex justify-between">
             <dt className="text-slate-500">Aplicação</dt>
-            <dd className="font-medium text-slate-800">AutoControl — Oficina Mecânica e Funilaria</dd>
+            <dd className="font-medium text-slate-800">Sangalli Gestão — Oficina Mecânica e Funilaria</dd>
           </div>
           <div className="flex justify-between">
             <dt className="text-slate-500">API</dt>
-            <dd className="font-medium text-slate-800">{API_URL}</dd>
+            <dd className="font-mono text-xs font-medium text-slate-800">{API_URL}</dd>
           </div>
         </dl>
-      </Card>
+      </SectionCard>
     </div>
   );
 }

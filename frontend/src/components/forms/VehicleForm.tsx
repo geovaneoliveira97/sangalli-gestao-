@@ -96,6 +96,7 @@ export function VehicleForm({ initialValues, fixedClientId, onSubmit, onCancel }
           onChange={(e) => update('plate', formatPlate(e.target.value))}
           error={errors.plate}
           maxLength={8}
+          className="font-mono uppercase"
         />
         <Input
           label="Ano"

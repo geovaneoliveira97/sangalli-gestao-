@@ -45,6 +45,15 @@ export const deletePart = asyncHandler(async (req: Request, res: Response) => {
   const existing = await prisma.part.findUnique({ where: { id: req.params.id } });
   if (!existing) throw new NotFoundError('Peça não encontrada.');
 
-  await prisma.part.update({ where: { id: req.params.id }, data: { active: false } });
-  return res.status(204).send();
+  // Peça nunca usada em nenhuma OS: pode remover de vez do catálogo. Se já
+  // foi usada, preserva o histórico das ordens de serviço existentes e
+  // apenas desativa (some da lista de seleção em novas OS).
+  const usageCount = await prisma.workOrderPart.count({ where: { partId: existing.id } });
+  if (usageCount === 0) {
+    await prisma.part.delete({ where: { id: existing.id } });
+    return res.json({ deleted: true, deactivated: false });
+  }
+
+  await prisma.part.update({ where: { id: existing.id }, data: { active: false } });
+  return res.json({ deleted: false, deactivated: true, usageCount });
 });

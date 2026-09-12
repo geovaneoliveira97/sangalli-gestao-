@@ -19,16 +19,14 @@ import {
 } from '../services/catalogService';
 import { getApiErrorMessage } from '../services/api';
 import { useToast } from '../hooks/useToast';
-import { useAuth } from '../hooks/useAuth';
 import { formatCurrency } from '../utils/format';
 import type { Service } from '../types';
 
 const EMPTY: ServiceInput = { name: '', description: '', defaultPrice: 0, active: true };
 
 export function ServicesPage() {
-  const { hasRole } = useAuth();
   const { showToast } = useToast();
-  const canManage = hasRole('ADMIN');
+  const canManage = true;
 
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -92,8 +90,14 @@ export function ServicesPage() {
     if (!deleting) return;
     setIsDeleting(true);
     try {
-      await deleteService(deleting.id);
-      showToast('Serviço desativado.', 'success');
+      const result = await deleteService(deleting.id);
+      const noun = result.usageCount === 1 ? 'ordem de serviço' : 'ordens de serviço';
+      showToast(
+        result.deleted
+          ? 'Serviço removido do catálogo.'
+          : `Serviço já usado em ${result.usageCount} ${noun}: mantido no histórico e apenas desativado.`,
+        'success',
+      );
       setDeleting(null);
       load();
     } catch (err) {
@@ -106,6 +110,7 @@ export function ServicesPage() {
   return (
     <div>
       <PageHeader
+        eyebrow="Oficina"
         title="Serviços"
         description="Catálogo de serviços oferecidos pela oficina."
         action={
@@ -118,7 +123,7 @@ export function ServicesPage() {
       />
 
       {error && (
-        <div role="alert" className="mb-4 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
           <AlertCircle size={18} aria-hidden="true" />
           {error}
         </div>
@@ -130,7 +135,7 @@ export function ServicesPage() {
             <TableSkeleton rows={6} cols={4} />
           </div>
         ) : services.length === 0 ? (
-          <EmptyState icon={Wrench} title="Nenhum serviço cadastrado" />
+          <EmptyState icon={Wrench} title="Nenhum serviço cadastrado" description="Cadastre os serviços oferecidos para agilizar a montagem de orçamentos." />
         ) : (
           <div className="table-scroll">
             <table className="w-full text-left text-sm">
@@ -149,12 +154,12 @@ export function ServicesPage() {
                       <p className="font-medium text-slate-800">{service.name}</p>
                       {service.description && <p className="text-xs text-slate-500">{service.description}</p>}
                     </td>
-                    <td className="px-5 py-3 text-slate-600">{formatCurrency(service.defaultPrice)}</td>
+                    <td className="tabular px-5 py-3 text-slate-600">{formatCurrency(service.defaultPrice)}</td>
                     <td className="px-5 py-3">
                       <Badge
                         className={
                           service.active
-                            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                            ? 'border-status-success/30 bg-status-success-soft text-status-success'
                             : 'border-slate-300 bg-slate-100 text-slate-600'
                         }
                       >
@@ -176,7 +181,7 @@ export function ServicesPage() {
                             type="button"
                             onClick={() => setDeleting(service)}
                             aria-label={`Remover ${service.name}`}
-                            className="rounded-lg p-2 text-slate-500 hover:bg-red-50 hover:text-red-600"
+                            className="rounded-lg p-2 text-slate-500 hover:bg-status-danger-soft hover:text-status-danger"
                           >
                             <Trash2 size={16} />
                           </button>
@@ -236,8 +241,8 @@ export function ServicesPage() {
       <ConfirmDialog
         isOpen={Boolean(deleting)}
         title="Remover serviço"
-        message={`Deseja desativar o serviço "${deleting?.name}"?`}
-        confirmLabel="Desativar"
+        message={`Remover "${deleting?.name}"? Se ele nunca foi usado em nenhuma ordem de serviço, será excluído definitivamente. Se já foi usado, será apenas desativado para preservar o histórico.`}
+        confirmLabel="Remover"
         isLoading={isDeleting}
         onConfirm={handleDelete}
         onCancel={() => setDeleting(null)}

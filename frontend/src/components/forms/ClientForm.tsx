@@ -3,7 +3,7 @@ import { Loader2, MapPinOff } from 'lucide-react';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { fetchAddressByCep, CepError } from '../../services/cepService';
-import { formatCpf, formatPhone, formatZipCode } from '../../utils/format';
+import { formatPhone, formatZipCode } from '../../utils/format';
 import type { ClientInput } from '../../services/clientService';
 
 interface ClientFormProps {
@@ -14,7 +14,6 @@ interface ClientFormProps {
 
 const EMPTY: ClientInput = {
   name: '',
-  cpf: '',
   phone: '',
   whatsapp: '',
   email: '',
@@ -59,7 +58,6 @@ export function ClientForm({ initialValues, onSubmit, onCancel }: ClientFormProp
   function validate(): boolean {
     const nextErrors: Record<string, string> = {};
     if (!values.name.trim()) nextErrors.name = 'Informe o nome completo.';
-    if (values.cpf.replace(/\D/g, '').length !== 11) nextErrors.cpf = 'CPF deve ter 11 dígitos.';
     if (!values.phone.trim()) nextErrors.phone = 'Informe um telefone.';
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
@@ -90,14 +88,6 @@ export function ClientForm({ initialValues, onSubmit, onCancel }: ClientFormProp
           />
         </div>
         <Input
-          label="CPF"
-          required
-          value={values.cpf}
-          onChange={(e) => update('cpf', formatCpf(e.target.value))}
-          error={errors.cpf}
-          inputMode="numeric"
-        />
-        <Input
           label="Telefone"
           required
           value={values.phone}
@@ -121,7 +111,7 @@ export function ClientForm({ initialValues, onSubmit, onCancel }: ClientFormProp
       </fieldset>
 
       <fieldset className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <legend className="mb-1 text-sm font-semibold text-slate-700 sm:col-span-2">Endereço</legend>
+        <legend className="eyebrow mb-1 sm:col-span-2">Endereço</legend>
         <div>
           <Input
             label="CEP"
@@ -137,7 +127,7 @@ export function ClientForm({ initialValues, onSubmit, onCancel }: ClientFormProp
             </p>
           )}
           {cepStatus === 'error' && (
-            <p role="alert" className="mt-1 flex items-center gap-1.5 text-xs text-red-600">
+            <p role="alert" className="mt-1 flex items-center gap-1.5 text-xs text-status-danger">
               <MapPinOff size={12} /> {cepError}
             </p>
           )}

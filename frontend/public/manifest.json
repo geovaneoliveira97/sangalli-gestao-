@@ -1,13 +1,13 @@
 {
-  "name": "AutoControl — Oficina Mecânica e Funilaria",
-  "short_name": "AutoControl",
+  "name": "Sangalli Gestão — Oficina Mecânica e Funilaria",
+  "short_name": "Sangalli Gestão",
   "description": "Sistema de gestão para oficina mecânica e funilaria: ordens de serviço, clientes, veículos, orçamentos e acompanhamento do cliente.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
+  "background_color": "#15130F",
+  "theme_color": "#15130F",
   "lang": "pt-BR",
   "icons": [
     { "src": "/pwa-192x192.png", "sizes": "192x192", "type": "image/png" },

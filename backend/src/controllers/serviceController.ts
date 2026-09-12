@@ -38,6 +38,16 @@ export const deleteService = asyncHandler(async (req: Request, res: Response) =>
   const existing = await prisma.service.findUnique({ where: { id: req.params.id } });
   if (!existing) throw new NotFoundError('Serviço não encontrado.');
 
-  await prisma.service.update({ where: { id: req.params.id }, data: { active: false } });
-  return res.status(204).send();
+  // Serviço nunca usado em nenhuma OS: pode remover de vez do catálogo.
+  // Se já foi usado, o nome precisa ser preservado no histórico das ordens
+  // de serviço existentes — nesse caso apenas desativa (some da lista de
+  // seleção em novas OS, mas continua legível nas antigas).
+  const usageCount = await prisma.workOrderService.count({ where: { serviceId: existing.id } });
+  if (usageCount === 0) {
+    await prisma.service.delete({ where: { id: existing.id } });
+    return res.json({ deleted: true, deactivated: false });
+  }
+
+  await prisma.service.update({ where: { id: existing.id }, data: { active: false } });
+  return res.json({ deleted: false, deactivated: true, usageCount });
 });

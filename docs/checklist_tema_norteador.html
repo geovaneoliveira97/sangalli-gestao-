@@ -1,0 +1,419 @@
+<title>Checklist do Tema Norteador</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Work+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+  :root{
+    --paper:#EDF1EF;
+    --card:#FFFFFF;
+    --ink:#1B2220;
+    --ink-soft:#55605A;
+    --line:#D6DDD9;
+    --accent:#C98A00;
+    --accent-ink:#2A1E00;
+    --accent-soft:#FBEFC9;
+    --optional-ink:#6B6250;
+    --optional-line:#C7BEA8;
+    --shadow: 0 1px 2px rgba(27,34,32,.06), 0 4px 12px rgba(27,34,32,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#141918;
+      --card:#1D2422;
+      --ink:#E9EEEC;
+      --ink-soft:#A6B0AA;
+      --line:#333C38;
+      --accent:#F0B23A;
+      --accent-ink:#1C1400;
+      --accent-soft:#3A2E0C;
+      --optional-ink:#B7AD94;
+      --optional-line:#4A4432;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 16px rgba(0,0,0,.28);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#141918;
+    --card:#1D2422;
+    --ink:#E9EEEC;
+    --ink-soft:#A6B0AA;
+    --line:#333C38;
+    --accent:#F0B23A;
+    --accent-ink:#1C1400;
+    --accent-soft:#3A2E0C;
+    --optional-ink:#B7AD94;
+    --optional-line:#4A4432;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 16px rgba(0,0,0,.28);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', 'Segoe UI', sans-serif;
+    padding-inline:20px;
+    padding-block:32px 56px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:1040px; margin-inline:auto; }
+
+  /* ---------- Header: work-order style masthead ---------- */
+  .masthead{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:24px;
+    flex-wrap:wrap;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:18px;
+    margin-bottom:8px;
+  }
+  .masthead-main{ min-width:260px; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:0 0 8px;
+  }
+  h1{
+    font-family:'Oswald', 'Arial Narrow', sans-serif;
+    font-weight:700;
+    font-size:clamp(28px,4vw,40px);
+    letter-spacing:.01em;
+    text-transform:uppercase;
+    margin:0 0 10px;
+    line-height:1.05;
+    text-wrap:balance;
+  }
+  .lede{
+    max-width:62ch;
+    color:var(--ink-soft);
+    font-size:15px;
+    line-height:1.55;
+    margin:0;
+  }
+  .ticket{
+    font-family:'IBM Plex Mono', monospace;
+    background:var(--card);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+    padding:12px 16px;
+    min-width:172px;
+    text-align:right;
+  }
+  .ticket .label{
+    display:block;
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+  .ticket .num{
+    display:block;
+    font-size:20px;
+    font-weight:500;
+    color:var(--accent-ink);
+    background:var(--accent-soft);
+    padding:2px 6px;
+    margin-top:2px;
+  }
+  .print-btn{
+    margin-top:10px;
+    font-family:'Work Sans',sans-serif;
+    font-size:12px;
+    font-weight:600;
+    background:none;
+    border:1px solid var(--ink-soft);
+    color:var(--ink);
+    padding:6px 12px;
+    cursor:pointer;
+  }
+  .print-btn:hover{ border-color:var(--ink); }
+  .print-btn:focus-visible, a:focus-visible, button:focus-visible{
+    outline:2px solid var(--accent); outline-offset:2px;
+  }
+
+  /* ---------- Stat strip ---------- */
+  .stats{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0;
+    border-bottom:1px solid var(--line);
+    margin-bottom:28px;
+  }
+  .stat{
+    font-family:'IBM Plex Mono', monospace;
+    padding:14px 20px 14px 0;
+    margin-right:20px;
+    border-right:1px solid var(--line);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat:last-child{ border-right:none; }
+  .stat b{
+    display:block;
+    font-size:20px;
+    color:var(--ink);
+    font-weight:500;
+  }
+  .stat span{
+    display:block;
+    font-size:10.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+
+  /* ---------- Grid of requirement cards ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+  }
+  @media (max-width:900px){ .grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:600px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:4px solid var(--accent);
+    box-shadow:var(--shadow);
+    padding:16px 16px 14px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .card.optional{
+    border-left:4px dashed var(--optional-line);
+  }
+
+  .card-top{ display:flex; align-items:flex-start; gap:10px; }
+  .badge{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    font-weight:500;
+    color:var(--accent-ink);
+    background:var(--accent);
+    padding:3px 7px;
+    flex:none;
+    line-height:1.4;
+  }
+  .card.optional .badge{
+    background:none;
+    border:1px solid var(--optional-line);
+    color:var(--optional-ink);
+  }
+  .card-title{ min-width:0; }
+  .card-title h2{
+    font-family:'Oswald', 'Arial Narrow', sans-serif;
+    font-size:16px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.01em;
+    margin:0;
+    line-height:1.2;
+  }
+  .opt-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--optional-ink);
+    border:1px solid var(--optional-line);
+    padding:1px 5px;
+    margin-top:5px;
+  }
+
+  .chips{ display:flex; flex-wrap:wrap; gap:6px; }
+  .chip{
+    font-family:'Work Sans',sans-serif;
+    font-size:12px;
+    font-weight:500;
+    background:var(--accent-soft);
+    color:var(--accent-ink);
+    padding:3px 9px;
+    border-radius:3px;
+  }
+  .card.optional .chip{
+    background:transparent;
+    border:1px solid var(--optional-line);
+    color:var(--optional-ink);
+  }
+
+  .evidence{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    line-height:1.5;
+    word-break:break-word;
+  }
+  .evidence::before{ content:"› "; color:var(--accent); }
+  .card.optional .evidence::before{ color:var(--optional-ink); }
+
+  .fala{
+    margin-top:auto;
+    padding-top:10px;
+    border-top:1px solid var(--line);
+    font-size:13px;
+    line-height:1.5;
+    color:var(--ink);
+  }
+  .fala .who{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+
+  footer{
+    margin-top:36px;
+    padding-top:14px;
+    border-top:1px solid var(--line);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+
+  @media print{
+    body{ background:#fff; color:#000; padding:0; }
+    .print-btn{ display:none; }
+    .card{ box-shadow:none; break-inside:avoid; }
+    .ticket{ box-shadow:none; }
+  }
+</style>
+
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="masthead-main">
+      <p class="eyebrow">Sangalli Gestão — Projeto Integrador II</p>
+      <h1>Checklist do Tema Norteador</h1>
+      <p class="lede">Cada exigência do tema do PI, a tecnologia real usada no projeto, onde ela aparece no código e o que responder se o professor perguntar na arguição.</p>
+    </div>
+    <div>
+      <div class="ticket">
+        <span class="label">Ficha nº</span>
+        <span class="num">SG–2026.09</span>
+      </div>
+      <button class="print-btn" onclick="window.print()" type="button">Imprimir ficha</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>9</b><span>Exigências do tema</span></div>
+    <div class="stat"><b>45</b><span>Testes automatizados</span></div>
+    <div class="stat"><b>100%</b><span>TypeScript</span></div>
+    <div class="stat"><b>3</b><span>Serviços em nuvem</span></div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-top">
+        <span class="badge">01</span>
+        <div class="card-title"><h2>Framework web</h2></div>
+      </div>
+      <div class="chips"><span class="chip">React 18</span><span class="chip">Express</span></div>
+      <p class="evidence">frontend/package.json · backend/package.json</p>
+      <p class="fala"><span class="who">Se perguntar</span>“Usamos dois frameworks: React no front-end, que monta a interface, e Express no back-end, que recebe e responde as requisições da API. Os dois têm sistema de rotas próprio.”</p>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="badge">02</span>
+        <div class="card-title"><h2>Banco de dados</h2></div>
+      </div>
+      <div class="chips"><span class="chip">PostgreSQL</span><span class="chip">Prisma ORM</span><span class="chip">Supabase</span></div>
+      <p class="evidence">backend/prisma/schema.prisma</p>
+      <p class="fala"><span class="who">Se perguntar</span>“O banco é relacional, PostgreSQL, hospedado no Supabase. A gente não escreve SQL na mão — o Prisma traduz nosso código TypeScript em consultas SQL.”</p>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="badge">03</span>
+        <div class="card-title"><h2>Script web (JavaScript)</h2></div>
+      </div>
+      <div class="chips"><span class="chip">TypeScript</span></div>
+      <p class="evidence">tsconfig.json (frontend e backend)</p>
+      <p class="fala"><span class="who">Se perguntar</span>“Todo o projeto é escrito em TypeScript, que é JavaScript com tipos — evita muitos erros antes mesmo de rodar o código.”</p>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="badge">04</span>
+        <div class="card-title"><h2>Computação em nuvem</h2></div>
+      </div>
+      <div class="chips"><span class="chip">Supabase</span><span class="chip">Netlify</span><span class="chip">Render</span></div>
+      <p class="evidence">backend/.env · frontend/netlify.toml</p>
+      <p class="fala"><span class="who">Se perguntar</span>“O banco já roda na nuvem, no Supabase. O front vai pro Netlify e o back pro Render — os dois fazem deploy automático a cada push no Git.”</p>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="badge">05</span>
+        <div class="card-title"><h2>Uso de API</h2></div>
+      </div>
+      <div class="chips"><span class="chip">ViaCEP</span><span class="chip">Cloudinary</span><span class="chip">API REST própria</span></div>
+      <p class="evidence">frontend/src/services/cepService.ts</p>
+      <p class="fala"><span class="who">Se perguntar</span>“Consumimos APIs externas prontas — ViaCEP e Cloudinary — e também construímos nossa própria API REST em Express, que o front consome.”</p>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="badge">06</span>
+        <div class="card-title"><h2>Acessibilidade</h2></div>
+      </div>
+      <div class="chips"><span class="chip">HTML semântico</span><span class="chip">ARIA</span><span class="chip">Lighthouse</span></div>
+      <p class="evidence">Componentes de formulário do frontend</p>
+      <p class="fala"><span class="who">Se perguntar</span>“Todo campo tem label, os elementos têm aria-label, o foco do teclado é visível e o status nunca depende só de cor. Auditamos isso com o Lighthouse.”</p>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="badge">07</span>
+        <div class="card-title"><h2>Controle de versão</h2></div>
+      </div>
+      <div class="chips"><span class="chip">Git</span><span class="chip">GitHub</span></div>
+      <p class="evidence">Histórico de commits (git log)</p>
+      <p class="fala"><span class="who">Se perguntar</span>“Usamos Git desde o primeiro dia, com commits organizados e hospedagem no GitHub — dá pra ver toda a evolução do projeto.”</p>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="badge">08</span>
+        <div class="card-title"><h2>Testes</h2></div>
+      </div>
+      <div class="chips"><span class="chip">Vitest</span><span class="chip">Supertest</span><span class="chip">Testing Library</span></div>
+      <p class="evidence">backend/tests/ · *.test.tsx do frontend</p>
+      <p class="fala"><span class="who">Se perguntar</span>“45 testes automatizados no total — 21 no back-end e 24 no front-end — cobrindo login, cadastros e o fluxo completo de ordem de serviço.”</p>
+    </div>
+
+    <div class="card optional">
+      <div class="card-top">
+        <span class="badge">09</span>
+        <div class="card-title">
+          <h2>Análise de dados</h2>
+          <span class="opt-tag">Opcional</span>
+        </div>
+      </div>
+      <div class="chips"><span class="chip">Recharts</span></div>
+      <p class="evidence">pages/DashboardPage.tsx · pages/ReportsPage.tsx</p>
+      <p class="fala"><span class="who">Se perguntar</span>“Como item opcional, temos um painel com gráficos de faturamento mensal, ordens por status e serviços mais realizados, calculados a partir dos dados reais do banco.”</p>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>Baseado no Relatório Parcial — Sangalli Gestão, 2026</span>
+    <span>Tema norteador: framework web · banco de dados · script web · nuvem · API · acessibilidade · versionamento · testes</span>
+  </footer>
+
+</div>

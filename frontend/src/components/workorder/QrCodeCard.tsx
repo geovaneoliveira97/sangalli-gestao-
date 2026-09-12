@@ -39,7 +39,8 @@ export function QrCodeCard({ workOrderId, workOrderNumber, publicToken }: QrCode
 
   return (
     <Card className="p-5 text-center">
-      <h2 className="mb-1 text-base font-semibold text-slate-900">Acompanhe seu veículo</h2>
+      <p className="eyebrow">Acompanhamento do cliente</p>
+      <h2 className="mb-1 text-sm font-semibold text-slate-900">Acompanhe seu veículo</h2>
       <p className="mb-4 text-sm text-slate-500">Escaneie com a câmera do celular.</p>
 
       <div className="mx-auto mb-4 flex h-44 w-44 items-center justify-center rounded-lg border border-slate-200 bg-white p-2">
@@ -62,7 +63,7 @@ export function QrCodeCard({ workOrderId, workOrderNumber, publicToken }: QrCode
         >
           <ExternalLink size={14} /> Abrir página pública
         </a>
-        <p className="break-all text-xs text-slate-400">{trackingUrl}</p>
+        <p className="break-all font-mono text-xs text-slate-400">{trackingUrl}</p>
       </div>
     </Card>
   );

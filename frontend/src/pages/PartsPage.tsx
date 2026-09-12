@@ -18,16 +18,14 @@ import {
 } from '../services/catalogService';
 import { getApiErrorMessage } from '../services/api';
 import { useToast } from '../hooks/useToast';
-import { useAuth } from '../hooks/useAuth';
 import { formatCurrency } from '../utils/format';
 import type { Part } from '../types';
 
 const EMPTY: PartInput = { name: '', code: '', manufacturer: '', price: 0, stock: 0, active: true };
 
 export function PartsPage() {
-  const { hasRole } = useAuth();
   const { showToast } = useToast();
-  const canManage = hasRole('ADMIN');
+  const canManage = true;
 
   const [parts, setParts] = useState<Part[]>([]);
   const [search, setSearch] = useState('');
@@ -98,8 +96,14 @@ export function PartsPage() {
     if (!deleting) return;
     setIsDeleting(true);
     try {
-      await deletePart(deleting.id);
-      showToast('Peça desativada.', 'success');
+      const result = await deletePart(deleting.id);
+      const noun = result.usageCount === 1 ? 'ordem de serviço' : 'ordens de serviço';
+      showToast(
+        result.deleted
+          ? 'Peça removida do catálogo.'
+          : `Peça já usada em ${result.usageCount} ${noun}: mantida no histórico e apenas desativada.`,
+        'success',
+      );
       setDeleting(null);
       load(search || undefined);
     } catch (err) {
@@ -112,6 +116,7 @@ export function PartsPage() {
   return (
     <div>
       <PageHeader
+        eyebrow="Oficina"
         title="Peças"
         description="Estoque e catálogo de peças utilizadas nos serviços."
         action={
@@ -123,7 +128,7 @@ export function PartsPage() {
         }
       />
 
-      <div className="mb-4 max-w-sm">
+      <Card className="mb-4 max-w-sm p-3">
         <label htmlFor="part-search" className="sr-only">
           Buscar peças
         </label>
@@ -133,12 +138,12 @@ export function PartsPage() {
           placeholder="Buscar por nome ou código"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="min-h-[44px] w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-600"
+          className="min-h-[40px] w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-brand-600"
         />
-      </div>
+      </Card>
 
       {error && (
-        <div role="alert" className="mb-4 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
           <AlertCircle size={18} aria-hidden="true" />
           {error}
         </div>
@@ -150,7 +155,11 @@ export function PartsPage() {
             <TableSkeleton rows={6} cols={5} />
           </div>
         ) : parts.length === 0 ? (
-          <EmptyState icon={Package} title="Nenhuma peça cadastrada" />
+          <EmptyState
+            icon={Package}
+            title="Nenhuma peça cadastrada"
+            description="Cadastre as peças usadas na oficina para controlar estoque e agilizar orçamentos."
+          />
         ) : (
           <div className="table-scroll">
             <table className="w-full text-left text-sm">
@@ -170,16 +179,16 @@ export function PartsPage() {
                       <p className="font-medium text-slate-800">{part.name}</p>
                       {part.manufacturer && <p className="text-xs text-slate-500">{part.manufacturer}</p>}
                     </td>
-                    <td className="px-5 py-3 text-slate-600">{part.code}</td>
-                    <td className="px-5 py-3 text-slate-600">{formatCurrency(part.price)}</td>
+                    <td className="px-5 py-3 font-mono text-xs text-slate-600">{part.code}</td>
+                    <td className="tabular px-5 py-3 text-slate-600">{formatCurrency(part.price)}</td>
                     <td className="px-5 py-3">
                       <Badge
                         className={
                           part.stock > 5
-                            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                            ? 'border-status-success/30 bg-status-success-soft text-status-success'
                             : part.stock > 0
-                              ? 'border-amber-200 bg-amber-50 text-amber-700'
-                              : 'border-red-200 bg-red-50 text-red-700'
+                              ? 'border-status-warning/40 bg-status-warning-soft text-status-warning'
+                              : 'border-status-danger/30 bg-status-danger-soft text-status-danger'
                         }
                       >
                         {part.stock} un.
@@ -200,7 +209,7 @@ export function PartsPage() {
                             type="button"
                             onClick={() => setDeleting(part)}
                             aria-label={`Remover ${part.name}`}
-                            className="rounded-lg p-2 text-slate-500 hover:bg-red-50 hover:text-red-600"
+                            className="rounded-lg p-2 text-slate-500 hover:bg-status-danger-soft hover:text-status-danger"
                           >
                             <Trash2 size={16} />
                           </button>
@@ -276,8 +285,8 @@ export function PartsPage() {
       <ConfirmDialog
         isOpen={Boolean(deleting)}
         title="Remover peça"
-        message={`Deseja desativar a peça "${deleting?.name}"?`}
-        confirmLabel="Desativar"
+        message={`Remover "${deleting?.name}"? Se ela nunca foi usada em nenhuma ordem de serviço, será excluída definitivamente. Se já foi usada, será apenas desativada para preservar o histórico.`}
+        confirmLabel="Remover"
         isLoading={isDeleting}
         onConfirm={handleDelete}
         onCancel={() => setDeleting(null)}

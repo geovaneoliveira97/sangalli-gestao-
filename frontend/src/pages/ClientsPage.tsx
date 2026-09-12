@@ -18,13 +18,10 @@ import {
 } from '../services/clientService';
 import { getApiErrorMessage } from '../services/api';
 import { useToast } from '../hooks/useToast';
-import { useAuth } from '../hooks/useAuth';
 import type { Client } from '../types';
 
 export function ClientsPage() {
-  const { hasRole } = useAuth();
   const { showToast } = useToast();
-  const canManage = hasRole('ADMIN', 'ATENDENTE');
 
   const [clients, setClients] = useState<Client[]>([]);
   const [search, setSearch] = useState('');
@@ -103,36 +100,35 @@ export function ClientsPage() {
   return (
     <div>
       <PageHeader
+        eyebrow="Operação"
         title="Clientes"
         description="Cadastro e gerenciamento dos clientes da oficina."
         action={
-          canManage && (
-            <Button onClick={openCreate}>
-              <Plus size={18} /> Novo cliente
-            </Button>
-          )
+          <Button onClick={openCreate}>
+            <Plus size={18} /> Novo cliente
+          </Button>
         }
       />
 
-      <div className="mb-4 max-w-sm">
+      <Card className="mb-4 max-w-sm p-3">
         <label htmlFor="client-search" className="sr-only">
           Buscar clientes
         </label>
         <div className="relative">
-          <Search size={18} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             id="client-search"
             type="search"
-            placeholder="Buscar por nome, CPF ou telefone"
+            placeholder="Buscar por nome ou telefone"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="min-h-[44px] w-full rounded-lg border border-slate-300 py-2 pl-10 pr-3 text-sm focus:border-brand-600"
+            className="min-h-[40px] w-full rounded border border-slate-300 py-2 pl-9 pr-3 text-sm focus:border-brand-600"
           />
         </div>
-      </div>
+      </Card>
 
       {error && (
-        <div role="alert" className="mb-4 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
           <AlertCircle size={18} aria-hidden="true" />
           {error}
         </div>
@@ -141,7 +137,7 @@ export function ClientsPage() {
       <Card>
         {isLoading ? (
           <div className="p-5">
-            <TableSkeleton rows={6} cols={5} />
+            <TableSkeleton rows={6} cols={4} />
           </div>
         ) : clients.length === 0 ? (
           <EmptyState
@@ -149,11 +145,9 @@ export function ClientsPage() {
             title="Nenhum cliente encontrado"
             description="Cadastre o primeiro cliente da oficina para começar."
             action={
-              canManage && (
-                <Button onClick={openCreate}>
-                  <Plus size={18} /> Novo cliente
-                </Button>
-              )
+              <Button onClick={openCreate}>
+                <Plus size={18} /> Novo cliente
+              </Button>
             }
           />
         ) : (
@@ -162,7 +156,6 @@ export function ClientsPage() {
               <thead className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
                 <tr>
                   <th scope="col" className="px-5 py-3">Nome</th>
-                  <th scope="col" className="px-5 py-3">CPF</th>
                   <th scope="col" className="px-5 py-3">Telefone</th>
                   <th scope="col" className="px-5 py-3">Veículos</th>
                   <th scope="col" className="px-5 py-3 text-right">Ações</th>
@@ -176,31 +169,26 @@ export function ClientsPage() {
                         {client.name}
                       </Link>
                     </td>
-                    <td className="px-5 py-3 text-slate-600">{client.cpf}</td>
-                    <td className="px-5 py-3 text-slate-600">{client.phone}</td>
+                    <td className="tabular px-5 py-3 text-slate-600">{client.phone}</td>
                     <td className="px-5 py-3 text-slate-600">{client._count?.vehicles ?? 0}</td>
                     <td className="px-5 py-3">
                       <div className="flex justify-end gap-1">
-                        {canManage && (
-                          <button
-                            type="button"
-                            onClick={() => openEdit(client)}
-                            aria-label={`Editar ${client.name}`}
-                            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-brand-700"
-                          >
-                            <Pencil size={16} />
-                          </button>
-                        )}
-                        {hasRole('ADMIN') && (
-                          <button
-                            type="button"
-                            onClick={() => setDeletingClient(client)}
-                            aria-label={`Remover ${client.name}`}
-                            className="rounded-lg p-2 text-slate-500 hover:bg-red-50 hover:text-red-600"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        )}
+                        <button
+                          type="button"
+                          onClick={() => openEdit(client)}
+                          aria-label={`Editar ${client.name}`}
+                          className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-brand-700"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDeletingClient(client)}
+                          aria-label={`Remover ${client.name}`}
+                          className="rounded-lg p-2 text-slate-500 hover:bg-status-danger-soft hover:text-status-danger"
+                        >
+                          <Trash2 size={16} />
+                        </button>
                       </div>
                     </td>
                   </tr>

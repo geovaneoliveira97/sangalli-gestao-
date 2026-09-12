@@ -8,10 +8,20 @@ import { errorHandler, notFoundHandler } from './middlewares/errorHandler';
 export function createApp() {
   const app = express();
 
+  app.set('trust proxy', 1);
+
+  if (!process.env.FRONTEND_URL && process.env.NODE_ENV === 'production') {
+    throw new Error('FRONTEND_URL precisa estar definida em produção.');
+  }
+
+  const allowedOrigins = (process.env.FRONTEND_URL ?? 'http://localhost:5173')
+    .split(',')
+    .map((origin) => origin.trim());
+
   app.use(helmet());
   app.use(
     cors({
-      origin: process.env.FRONTEND_URL ?? '*',
+      origin: allowedOrigins,
     }),
   );
   app.use(express.json({ limit: '2mb' }));

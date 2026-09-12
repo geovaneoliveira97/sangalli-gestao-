@@ -50,29 +50,7 @@ async function main() {
     },
   });
 
-  const atendente = await prisma.user.upsert({
-    where: { email: 'atendente@autocontrol.com.br' },
-    update: {},
-    create: {
-      name: 'Carlos Eduardo Souza',
-      email: 'atendente@autocontrol.com.br',
-      passwordHash,
-      role: 'ATENDENTE',
-    },
-  });
-
-  const mecanico = await prisma.user.upsert({
-    where: { email: 'mecanico@autocontrol.com.br' },
-    update: {},
-    create: {
-      name: 'Roberto Lima',
-      email: 'mecanico@autocontrol.com.br',
-      passwordHash,
-      role: 'MECANICO',
-    },
-  });
-
-  const users = [admin, atendente, mecanico];
+  const users = [admin];
   console.log('Usuários criados.');
 
   // ---------- CLIENTES ----------
@@ -323,10 +301,8 @@ async function main() {
 
   console.log('Seed finalizado com sucesso.');
   console.log('----------------------------------------');
-  console.log('Usuários de demonstração (senha: 123456):');
+  console.log('Usuário de demonstração (senha: 123456):');
   console.log('  admin@autocontrol.com.br      (Administrador)');
-  console.log('  atendente@autocontrol.com.br  (Atendente)');
-  console.log('  mecanico@autocontrol.com.br   (Mecânico)');
   console.log('----------------------------------------');
 }
 

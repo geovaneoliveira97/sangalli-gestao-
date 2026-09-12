@@ -62,7 +62,7 @@ export function PhotoUploadModal({ isOpen, onClose, onUpload }: PhotoUploadModal
       <div className="space-y-4">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="photo-file" className="text-sm font-medium text-slate-700">
-            Arquivo de imagem <span className="text-red-600">*</span>
+            Arquivo de imagem <span className="text-status-danger">*</span>
           </label>
           <input
             id="photo-file"
@@ -76,7 +76,7 @@ export function PhotoUploadModal({ isOpen, onClose, onUpload }: PhotoUploadModal
             JPG, PNG ou WEBP, até {MAX_SIZE_MB}MB.
           </p>
           {error && (
-            <p id="photo-file-error" role="alert" className="text-xs font-medium text-red-600">
+            <p id="photo-file-error" role="alert" className="text-xs font-medium text-status-danger">
               {error}
             </p>
           )}

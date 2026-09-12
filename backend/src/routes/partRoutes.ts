@@ -6,7 +6,7 @@ import {
   listParts,
   updatePart,
 } from '../controllers/partController';
-import { authenticate, authorize } from '../middlewares/auth';
+import { authenticate } from '../middlewares/auth';
 
 const router = Router();
 
@@ -14,8 +14,8 @@ router.use(authenticate);
 
 router.get('/', listParts);
 router.get('/:id', getPart);
-router.post('/', authorize('ADMIN'), createPart);
-router.put('/:id', authorize('ADMIN'), updatePart);
-router.delete('/:id', authorize('ADMIN'), deletePart);
+router.post('/', createPart);
+router.put('/:id', updatePart);
+router.delete('/:id', deletePart);
 
 export default router;

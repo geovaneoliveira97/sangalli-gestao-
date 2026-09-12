@@ -40,7 +40,8 @@ describe('PublicTrackingPage (acompanhamento do cliente)', () => {
     renderPage();
 
     expect(await screen.findByText('Chevrolet Onix')).toBeInTheDocument();
-    expect(screen.getByText('Em manutenção')).toBeInTheDocument();
+    // "Em manutenção" aparece tanto no status atual quanto na linha do tempo.
+    expect(screen.getAllByText('Em manutenção').length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText('R$ 155,00')).toBeInTheDocument();
     expect(screen.getByText('Aguardando peça para conclusão.')).toBeInTheDocument();
   });

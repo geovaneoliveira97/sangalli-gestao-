@@ -14,6 +14,7 @@ import {
 } from 'recharts';
 import { PageHeader } from '../components/ui/PageHeader';
 import { Card } from '../components/ui/Card';
+import { SectionCard } from '../components/ui/SectionCard';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
 import { StatCard } from '../components/StatCard';
@@ -22,7 +23,7 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { fetchReports } from '../services/reportService';
 import { getApiErrorMessage } from '../services/api';
 import { formatCurrency } from '../utils/format';
-import { CHART_INK, SEQUENTIAL_BLUE, STATUS_CHART_COLORS } from '../utils/chartColors';
+import { CHART_INK, SEQUENTIAL_ACCENT, STATUS_CHART_COLORS } from '../utils/chartColors';
 import { STATUS_LABELS } from '../utils/statusLabels';
 import type { ReportsData, WorkOrderStatus } from '../types';
 
@@ -45,9 +46,9 @@ export function ReportsPage() {
 
   return (
     <div>
-      <PageHeader title="Relatórios" description="Indicadores e desempenho da oficina." />
+      <PageHeader eyebrow="Gestão" title="Relatórios" description="Indicadores e desempenho da oficina." />
 
-      <Card className="mb-6 p-4">
+      <Card className="mb-5 p-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <Input label="Data inicial" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
           <Input label="Data final" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
@@ -63,34 +64,33 @@ export function ReportsPage() {
       </Card>
 
       {error && (
-        <div role="alert" className="mb-4 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
           <AlertCircle size={18} aria-hidden="true" />
           {error}
         </div>
       )}
 
       {isLoading ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-24" />
+            <Skeleton key={i} className="h-16" />
           ))}
         </div>
       ) : (
         data && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <StatCard icon={DollarSign} label="Faturamento" value={formatCurrency(data.indicators.revenue)} accent="bg-emerald-50 text-emerald-700" />
-            <StatCard icon={CheckCircle2} label="OS concluídas" value={data.indicators.completedWorkOrders} accent="bg-blue-50 text-blue-700" />
-            <StatCard icon={Receipt} label="Ticket médio" value={formatCurrency(data.indicators.averageTicket)} accent="bg-amber-50 text-amber-700" />
-            <StatCard icon={Clock} label="Tempo médio de serviço" value={`${data.indicators.averageServiceTimeDays.toFixed(1)} dias`} accent="bg-purple-50 text-purple-700" />
-            <StatCard icon={Car} label="Veículos atendidos" value={data.indicators.vehiclesServed} accent="bg-sky-50 text-sky-700" />
-            <StatCard icon={UserPlus} label="Novos clientes" value={data.indicators.newClients} accent="bg-rose-50 text-rose-700" />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <StatCard icon={DollarSign} label="Faturamento" value={formatCurrency(data.indicators.revenue)} tone="success" />
+            <StatCard icon={CheckCircle2} label="OS concluídas" value={data.indicators.completedWorkOrders} tone="info" />
+            <StatCard icon={Receipt} label="Ticket médio" value={formatCurrency(data.indicators.averageTicket)} tone="warning" />
+            <StatCard icon={Clock} label="Tempo médio de serviço" value={`${data.indicators.averageServiceTimeDays.toFixed(1)} dias`} tone="neutral" />
+            <StatCard icon={Car} label="Veículos atendidos" value={data.indicators.vehiclesServed} tone="info" />
+            <StatCard icon={UserPlus} label="Novos clientes" value={data.indicators.newClients} tone="neutral" />
           </div>
         )
       )}
 
-      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <Card className="p-5">
-          <h2 className="mb-4 text-base font-semibold text-slate-900">Faturamento por mês</h2>
+      <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <SectionCard eyebrow="Evolução" title="Faturamento por mês">
           {isLoading ? (
             <Skeleton className="h-64" />
           ) : data && data.charts.revenueByMonth.some((m) => m.total > 0) ? (
@@ -100,16 +100,15 @@ export function ReportsPage() {
                 <XAxis dataKey="month" stroke={CHART_INK.muted} fontSize={12} tickLine={false} />
                 <YAxis stroke={CHART_INK.muted} fontSize={12} tickFormatter={(v) => formatCurrency(v)} width={90} />
                 <Tooltip formatter={(value: number) => formatCurrency(value)} />
-                <Line type="monotone" dataKey="total" name="Faturamento" stroke={SEQUENTIAL_BLUE} strokeWidth={2} dot={{ r: 4 }} />
+                <Line type="monotone" dataKey="total" name="Faturamento" stroke={SEQUENTIAL_ACCENT} strokeWidth={2} dot={{ r: 4 }} />
               </LineChart>
             </ResponsiveContainer>
           ) : (
-            <EmptyState icon={DollarSign} title="Sem dados no período selecionado" />
+            <EmptyState icon={DollarSign} title="Sem dados no período selecionado" description="Ajuste o período ou o filtro de status acima." />
           )}
-        </Card>
+        </SectionCard>
 
-        <Card className="p-5">
-          <h2 className="mb-4 text-base font-semibold text-slate-900">OS por status</h2>
+        <SectionCard eyebrow="Distribuição" title="OS por status">
           {isLoading ? (
             <Skeleton className="h-64" />
           ) : data && data.charts.ordersByStatus.length > 0 ? (
@@ -126,7 +125,7 @@ export function ReportsPage() {
                   tickFormatter={(s) => STATUS_LABELS[s as WorkOrderStatus]}
                 />
                 <Tooltip formatter={(value: number) => [value, 'Ordens']} labelFormatter={(s) => STATUS_LABELS[s as WorkOrderStatus]} />
-                <Bar dataKey="count" name="Ordens" radius={[0, 4, 4, 0]}>
+                <Bar dataKey="count" name="Ordens" radius={[0, 3, 3, 0]}>
                   {data.charts.ordersByStatus.map((entry) => (
                     <Cell key={entry.status} fill={STATUS_CHART_COLORS[entry.status]} />
                   ))}
@@ -136,10 +135,9 @@ export function ReportsPage() {
           ) : (
             <EmptyState icon={DollarSign} title="Nenhuma ordem no período selecionado" />
           )}
-        </Card>
+        </SectionCard>
 
-        <Card className="p-5 lg:col-span-2">
-          <h2 className="mb-4 text-base font-semibold text-slate-900">Serviços mais realizados</h2>
+        <SectionCard className="lg:col-span-2" eyebrow="Catálogo" title="Serviços mais realizados">
           {isLoading ? (
             <Skeleton className="h-64" />
           ) : data && data.charts.topServices.length > 0 ? (
@@ -149,13 +147,13 @@ export function ReportsPage() {
                 <XAxis dataKey="name" stroke={CHART_INK.muted} fontSize={11} interval={0} angle={-20} textAnchor="end" height={60} />
                 <YAxis stroke={CHART_INK.muted} fontSize={12} allowDecimals={false} />
                 <Tooltip />
-                <Bar dataKey="count" name="Vezes realizado" fill={SEQUENTIAL_BLUE} radius={[4, 4, 0, 0]} />
+                <Bar dataKey="count" name="Vezes realizado" fill={SEQUENTIAL_ACCENT} radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
             <EmptyState icon={DollarSign} title="Nenhum serviço registrado ainda" />
           )}
-        </Card>
+        </SectionCard>
       </div>
     </div>
   );

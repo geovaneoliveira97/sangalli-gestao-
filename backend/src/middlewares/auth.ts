@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { UserRole } from '@prisma/client';
-import { ForbiddenError, UnauthorizedError } from '../utils/AppError';
+import { UnauthorizedError } from '../utils/AppError';
 
 export interface AuthPayload {
   sub: string;
@@ -39,16 +39,4 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
   } catch {
     throw new UnauthorizedError('Token inválido ou expirado.');
   }
-}
-
-export function authorize(...roles: UserRole[]) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user) {
-      throw new UnauthorizedError();
-    }
-    if (roles.length > 0 && !roles.includes(req.user.role)) {
-      throw new ForbiddenError('Você não tem permissão para executar esta ação.');
-    }
-    next();
-  };
 }

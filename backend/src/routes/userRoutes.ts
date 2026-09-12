@@ -6,11 +6,11 @@ import {
   listUsers,
   updateUser,
 } from '../controllers/userController';
-import { authenticate, authorize } from '../middlewares/auth';
+import { authenticate } from '../middlewares/auth';
 
 const router = Router();
 
-router.use(authenticate, authorize('ADMIN'));
+router.use(authenticate);
 
 router.get('/', listUsers);
 router.get('/:id', getUser);

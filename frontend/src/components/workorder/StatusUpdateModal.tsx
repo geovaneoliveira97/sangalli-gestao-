@@ -3,7 +3,7 @@ import { Modal } from '../ui/Modal';
 import { Select } from '../ui/Select';
 import { Textarea } from '../ui/Textarea';
 import { Button } from '../ui/Button';
-import { STATUS_ICONS, STATUS_LABELS, WORK_ORDER_STATUS_FLOW } from '../../utils/statusLabels';
+import { STATUS_LABELS, WORK_ORDER_STATUS_FLOW } from '../../utils/statusLabels';
 import type { WorkOrderStatus } from '../../types';
 
 interface StatusUpdateModalProps {
@@ -46,7 +46,7 @@ export function StatusUpdateModal({ isOpen, currentStatus, onClose, onUpdate }: 
         >
           {options.map((option) => (
             <option key={option} value={option}>
-              {STATUS_ICONS[option]} {STATUS_LABELS[option]}
+              {STATUS_LABELS[option]}
             </option>
           ))}
         </Select>

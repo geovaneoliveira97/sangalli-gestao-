@@ -1,4 +1,4 @@
-# AutoControl — Oficina Mecânica e Funilaria
+# Sangalli Gestão — Oficina Mecânica e Funilaria
 
 Sistema web completo de gestão para oficinas mecânicas e de funilaria/pintura: controle de
 clientes, veículos, ordens de serviço, orçamentos, peças, fotos e um **acompanhamento público
@@ -35,15 +35,15 @@ Projeto desenvolvido como **Projeto Integrador da UNIVESP**.
 
 Oficinas mecânicas e de funilaria pequenas e médias costumam controlar ordens de serviço em
 papel, planilhas ou aplicativos de mensagens, o que gera perda de informação, dificuldade de
-acompanhar o status dos veículos e falta de transparência com o cliente. O **AutoControl**
+acompanhar o status dos veículos e falta de transparência com o cliente. O **Sangalli Gestão**
 centraliza esse fluxo: da entrada do veículo até a entrega, com histórico completo, orçamento
 calculado automaticamente e uma página pública para que o cliente acompanhe o andamento do
 próprio veículo em tempo real, sem precisar criar conta ou ligar para a oficina.
 
 ## Funcionalidades
 
-- Autenticação com **JWT** e três perfis de acesso (Administrador, Atendente, Mecânico), cada
-  um com permissões distintas.
+- Autenticação com **JWT** (usuários administradores, sem diferenciação de permissões por
+  perfil — desnecessária para o escopo do projeto).
 - CRUD completo de **clientes**, com preenchimento automático de endereço via **ViaCEP**.
 - CRUD completo de **veículos**, vinculados a clientes (um cliente pode ter vários veículos).
 - **Ordens de serviço** com status (diagnóstico, aguardando aprovação, manutenção, funilaria,
@@ -73,21 +73,21 @@ Axios, vite-plugin-pwa, Vitest + React Testing Library.
 **Backend:** Node.js, Express, TypeScript, Prisma ORM, JWT (jsonwebtoken), bcrypt, Zod, Helmet,
 express-rate-limit, Multer, Cloudinary SDK, QRCode, Vitest + Supertest.
 
-**Banco de dados:** MySQL 8.
+**Banco de dados:** PostgreSQL, hospedado no Supabase.
 
-**Armazenamento de imagens:** Cloudinary (o MySQL guarda apenas URL, `public_id`, categoria e
+**Armazenamento de imagens:** Cloudinary (o banco guarda apenas URL, `public_id`, categoria e
 referência da ordem de serviço).
 
-**Hospedagem planejada:** Frontend no Netlify, backend no Render, MySQL em um serviço de nuvem
-compatível (ex.: Railway, PlanetScale/Aiven, Clever Cloud).
+**Hospedagem:** banco de dados no Supabase (já em uso); deploy planejado do frontend no Netlify
+e do backend no Render.
 
 ## Arquitetura
 
 ```text
-┌────────────────┐      HTTPS / REST      ┌──────────────────┐      Prisma      ┌──────────┐
-│   Frontend      │ ─────────────────────▶ │   Backend API     │ ───────────────▶ │  MySQL   │
-│ React + Vite    │ ◀───────────────────── │ Express + TS      │ ◀─────────────── │          │
-│ (Netlify)       │        JSON            │ (Render)          │                  └──────────┘
+┌────────────────┐      HTTPS / REST      ┌──────────────────┐      Prisma      ┌──────────────┐
+│   Frontend      │ ─────────────────────▶ │   Backend API     │ ───────────────▶ │  PostgreSQL  │
+│ React + Vite    │ ◀───────────────────── │ Express + TS      │ ◀─────────────── │  (Supabase)  │
+│ (Netlify)       │        JSON            │ (Render)          │                  └──────────────┘
 └────────────────┘                        └──────────────────┘
         │                                          │
         │                                          ▼
@@ -103,8 +103,8 @@ compatível (ex.: Railway, PlanetScale/Aiven, Clever Cloud).
 ```
 
 O frontend nunca acessa o banco diretamente: toda persistência passa pela API REST do backend,
-que valida (Zod), autentica (JWT) e autoriza (por perfil) cada requisição antes de falar com o
-MySQL via Prisma.
+que valida (Zod) e autentica (JWT) cada requisição antes de falar com o
+PostgreSQL (Supabase) via Prisma.
 
 ## Banco de dados
 
@@ -191,13 +191,14 @@ autocontrol/
 │   ├── prisma/           schema.prisma e seed.ts
 │   └── tests/            Testes de integração (Vitest + Supertest)
 │
-├── docker-compose.yml    MySQL local para desenvolvimento
+├── docker-compose.yml    (legado — MySQL local; o projeto usa PostgreSQL/Supabase, ver abaixo)
 └── README.md
 ```
 
 ## Instalação e configuração
 
-Pré-requisitos: **Node.js 18+**, **npm**, e um **MySQL** acessível (local, Docker ou nuvem).
+Pré-requisitos: **Node.js 18+**, **npm**, e um projeto **PostgreSQL** acessível — recomendado
+usar um projeto gratuito no [Supabase](https://supabase.com), que é o banco em uso atualmente.
 
 ```bash
 git clone <url-do-repositorio>
@@ -214,24 +215,24 @@ npm install
 cp .env.example .env   # ajuste VITE_API_URL se necessário
 ```
 
-### Banco de dados local com Docker (recomendado)
+### Banco de dados (Supabase)
 
-Na raiz do projeto:
+Crie um projeto gratuito em [supabase.com](https://supabase.com) (região São Paulo) e copie a
+Connection String (modo *pooling*, porta 6543, e a *Direct connection*, porta 5432) na aba
+Database do painel. Cole essas URLs em `DATABASE_URL` e `DIRECT_URL` no `.env` do backend — o
+Prisma usa a primeira para consultas normais e a segunda para rodar migrations.
 
-```bash
-docker compose up -d
-```
-
-Isso sobe um MySQL 8 em `localhost:3306` com usuário/senha `autocontrol` (já configurado no
-`.env.example` do backend). Se preferir usar um MySQL já instalado ou um serviço em nuvem, basta
-ajustar `DATABASE_URL` no `.env` do backend.
+> Nota: `docker-compose.yml` ainda sobe um MySQL local, mas é um resquício de uma versão anterior
+> do projeto — o schema atual (`backend/prisma/schema.prisma`) já está configurado para
+> PostgreSQL e não é compatível com esse container.
 
 ## Variáveis de ambiente
 
-**`backend/.env`** (veja `backend/.env.example`):
+**`backend/.env`**:
 
 ```text
-DATABASE_URL="mysql://autocontrol:autocontrol@localhost:3306/autocontrol"
+DATABASE_URL="postgresql://usuario:senha@host-pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://usuario:senha@host.supabase.com:5432/postgres"
 JWT_SECRET="troque-por-um-segredo-forte-aqui"
 JWT_EXPIRES_IN="8h"
 CLOUDINARY_CLOUD_NAME=
@@ -258,7 +259,7 @@ Nenhum segredo é commitado no repositório — apenas os arquivos `.env.example
 ```bash
 cd backend
 npm run prisma:generate
-npm run prisma:migrate     # cria as tabelas no MySQL
+npm run prisma:migrate     # cria as tabelas no PostgreSQL (Supabase)
 npm run seed                # popula dados de demonstração
 npm run dev                  # inicia a API em http://localhost:3333
 ```
@@ -284,13 +285,11 @@ npm run seed                  # popula usuários, clientes, veículos, serviços
 
 ## Usuário de demonstração
 
-O `seed` cria os seguintes usuários (senha **123456** para todos):
+O `seed` cria o seguinte usuário (senha **123456**):
 
 | Perfil         | E-mail                          |
 |----------------|----------------------------------|
 | Administrador  | `admin@autocontrol.com.br`       |
-| Atendente      | `atendente@autocontrol.com.br`   |
-| Mecânico       | `mecanico@autocontrol.com.br`    |
 
 Também são criados 10 clientes, 15 veículos, 10 serviços, 15 peças e 18 ordens de serviço em
 diferentes status, com timeline e pagamentos — todos com dados fictícios.
@@ -305,7 +304,7 @@ npm run seed   # necessário: os testes autenticam com os usuários de demonstra
 npm test
 ```
 
-Cobrem: login/autenticação, permissões por perfil, CRUD de clientes e veículos, criação de OS,
+Cobrem: login/autenticação, CRUD de clientes e veículos, criação de OS,
 inclusão de serviços/peças, cálculo de valores, pagamentos, atualização de status e consulta
 pública por token.
 
@@ -341,10 +340,10 @@ npm run preview     # serve o build localmente para conferência
   Render.
 - **Backend (Render):** Web Service Node, comando de build `npm install && npm run build &&
   npx prisma migrate deploy`, comando de start `npm start`, e configure as variáveis de ambiente
-  do `.env.example` (incluindo `DATABASE_URL` do MySQL em nuvem e `FRONTEND_URL` apontando para
-  o domínio do Netlify).
-- **Banco de dados:** qualquer serviço MySQL gerenciado compatível (Railway, PlanetScale, Aiven,
-  Clever Cloud, etc.), com a `DATABASE_URL` apontada nas variáveis de ambiente do backend.
+  (incluindo `DATABASE_URL`/`DIRECT_URL` do Supabase e `FRONTEND_URL` apontando para o domínio do
+  Netlify).
+- **Banco de dados:** Supabase (PostgreSQL gerenciado), já em uso, com `DATABASE_URL`/`DIRECT_URL`
+  apontadas nas variáveis de ambiente do backend.
 - **Imagens:** conta gratuita no Cloudinary.
 
 ## Requisitos do Projeto Integrador UNIVESP
@@ -352,11 +351,11 @@ npm run preview     # serve o build localmente para conferência
 | Requisito                  | Onde é atendido |
 |-----------------------------|------------------|
 | **Framework web**            | React (frontend) + Express (backend), com roteamento em ambos (React Router / Express Router). |
-| **Banco de dados**           | MySQL, modelado e acessado via Prisma ORM (`backend/prisma/schema.prisma`), com relacionamentos, índices e constraints. |
+| **Banco de dados**           | PostgreSQL, hospedado no Supabase e modelado/acessado via Prisma ORM (`backend/prisma/schema.prisma`), com relacionamentos, índices e constraints. |
 | **JavaScript / TypeScript**  | Todo o projeto (frontend e backend) é escrito em TypeScript com tipagem estrita. |
-| **Computação em nuvem**      | Deploy planejado: frontend no Netlify, backend no Render, banco em serviço MySQL gerenciado, imagens no Cloudinary. |
+| **Computação em nuvem**      | Banco de dados no Supabase (já em uso); deploy planejado do frontend no Netlify, do backend no Render, e imagens no Cloudinary. |
 | **Uso de API externa**       | Integração com a **API ViaCEP** para preenchimento automático de endereço a partir do CEP (`frontend/src/services/cepService.ts`), com tratamento de CEP inválido, não encontrado e indisponibilidade. |
-| **Acessibilidade**           | HTML semântico, labels em todos os campos, `aria-label`/`aria-describedby`, foco visível, navegação por teclado, contraste adequado, status sempre com ícone + texto (nunca só cor), alvos de toque ≥44px. |
+| **Acessibilidade**           | HTML semântico, labels em todos os campos, `aria-label`/`aria-describedby`, foco visível, navegação por teclado, contraste adequado, status sempre com ícone + texto (nunca só cor), alvos de toque de pelo menos 32–40px (adequados ao uso profissional denso, dentro do recomendado pelo WCAG). |
 | **Controle de versão**       | Git, com histórico de commits incrementais documentando a evolução do projeto (ver `git log`). |
 | **Testes automatizados**     | Backend: Vitest + Supertest (`backend/tests/`). Frontend: Vitest + React Testing Library (arquivos `*.test.ts(x)` em `frontend/src/`). |
 | **Análise de dados**         | Dashboard e página de Relatórios com indicadores (faturamento, ticket médio, tempo médio de serviço) e gráficos (Recharts): faturamento mensal, OS por status, serviços mais realizados. |

@@ -39,7 +39,7 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
     data: {
       name: data.name,
       email: data.email,
-      role: data.role,
+      role: 'ADMIN',
       passwordHash,
     },
     select: publicSelect,
@@ -60,7 +60,6 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
     data: {
       name: data.name,
       email: data.email,
-      role: data.role,
       active: data.active,
       ...(passwordHash ? { passwordHash } : {}),
     },

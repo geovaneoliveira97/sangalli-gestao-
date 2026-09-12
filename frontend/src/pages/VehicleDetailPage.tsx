@@ -2,21 +2,19 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ClipboardList, Gauge, Palette, Plus, AlertCircle } from 'lucide-react';
 import { PageHeader } from '../components/ui/PageHeader';
-import { Card } from '../components/ui/Card';
+import { SectionCard } from '../components/ui/SectionCard';
 import { Button } from '../components/ui/Button';
 import { EmptyState } from '../components/ui/EmptyState';
 import { Skeleton } from '../components/ui/Skeleton';
 import { StatusBadge } from '../components/StatusBadge';
 import { getVehicle } from '../services/vehicleService';
 import { getApiErrorMessage } from '../services/api';
-import { useAuth } from '../hooks/useAuth';
 import { formatDate } from '../utils/format';
 import type { Vehicle } from '../types';
 
 export function VehicleDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { hasRole } = useAuth();
 
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -42,7 +40,7 @@ export function VehicleDetailPage() {
 
   if (error || !vehicle) {
     return (
-      <div role="alert" className="flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+      <div role="alert" className="flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
         <AlertCircle size={18} aria-hidden="true" />
         {error || 'Veículo não encontrado.'}
       </div>
@@ -62,31 +60,31 @@ export function VehicleDetailPage() {
       </button>
 
       <PageHeader
+        eyebrow="Veículo"
         title={`${vehicle.brand} ${vehicle.model}`}
         description={
           client ? (
             <>
-              {vehicle.plate} · {vehicle.year} · Proprietário:{' '}
+              <span className="tabular font-mono">{vehicle.plate}</span> · {vehicle.year} · Proprietário:{' '}
               <Link to={`/clientes/${client.id}`} className="font-medium text-brand-700 hover:underline">
                 {client.name}
               </Link>
             </>
           ) : (
-            `${vehicle.plate} · ${vehicle.year}`
+            <>
+              <span className="tabular font-mono">{vehicle.plate}</span> · {vehicle.year}
+            </>
           )
         }
         action={
-          hasRole('ADMIN', 'ATENDENTE') && (
-            <Button onClick={() => navigate(`/ordens/nova?veiculoId=${vehicle.id}`)}>
-              <Plus size={18} /> Nova ordem de serviço
-            </Button>
-          )
+          <Button onClick={() => navigate(`/ordens/nova?veiculoId=${vehicle.id}`)}>
+            <Plus size={16} /> Nova ordem de serviço
+          </Button>
         }
       />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <Card className="p-5 lg:col-span-1">
-          <h2 className="mb-4 text-base font-semibold text-slate-900">Dados do veículo</h2>
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+        <SectionCard eyebrow="Ficha técnica" title="Dados do veículo" className="lg:col-span-1">
           <ul className="space-y-3 text-sm text-slate-700">
             <li className="flex items-center gap-2">
               <Palette size={16} className="text-slate-400" aria-hidden="true" />
@@ -94,32 +92,37 @@ export function VehicleDetailPage() {
             </li>
             <li className="flex items-center gap-2">
               <Gauge size={16} className="text-slate-400" aria-hidden="true" />
-              Quilometragem: {vehicle.mileage.toLocaleString('pt-BR')} km
+              Quilometragem: <span className="tabular">{vehicle.mileage.toLocaleString('pt-BR')} km</span>
             </li>
           </ul>
           {vehicle.notes && (
-            <div className="mt-4 rounded-lg bg-slate-50 p-3 text-sm text-slate-600">
-              <p className="mb-1 font-medium text-slate-700">Observações</p>
+            <div className="mt-4 rounded border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
+              <p className="eyebrow mb-1">Observações</p>
               {vehicle.notes}
             </div>
           )}
-        </Card>
+        </SectionCard>
 
-        <Card className="p-5 lg:col-span-2">
-          <h2 className="mb-4 text-base font-semibold text-slate-900">Histórico de ordens de serviço</h2>
+        <SectionCard eyebrow="Ordens de serviço" title="Histórico de ordens de serviço" className="lg:col-span-2" bodyClassName="p-0">
           {!vehicle.workOrders || vehicle.workOrders.length === 0 ? (
-            <EmptyState icon={ClipboardList} title="Nenhuma ordem de serviço para este veículo" />
+            <div className="p-5">
+              <EmptyState
+                icon={ClipboardList}
+                title="Nenhuma ordem de serviço para este veículo"
+                description="Quando uma OS for aberta para este veículo, ela aparecerá aqui."
+              />
+            </div>
           ) : (
             <ul className="divide-y divide-slate-100">
               {vehicle.workOrders.map((wo) => (
                 <li key={wo.id}>
                   <Link
                     to={`/ordens/${wo.id}`}
-                    className="flex flex-col gap-2 rounded-lg px-2 py-3 hover:bg-slate-50 sm:flex-row sm:items-center sm:justify-between"
+                    className="flex flex-col gap-2 px-5 py-3 hover:bg-slate-50 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div>
-                      <p className="font-medium text-slate-800">OS #{wo.number}</p>
-                      <p className="text-sm text-slate-500">{formatDate(wo.entryDate)}</p>
+                      <p className="font-mono text-xs font-semibold text-slate-700">OS-{String(wo.number).padStart(4, '0')}</p>
+                      <p className="tabular text-sm text-slate-500">{formatDate(wo.entryDate)}</p>
                     </div>
                     <StatusBadge status={wo.status} />
                   </Link>
@@ -127,7 +130,7 @@ export function VehicleDetailPage() {
               ))}
             </ul>
           )}
-        </Card>
+        </SectionCard>
       </div>
     </div>
   );

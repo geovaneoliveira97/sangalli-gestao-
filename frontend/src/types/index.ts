@@ -1,4 +1,4 @@
-export type UserRole = 'ADMIN' | 'ATENDENTE' | 'MECANICO';
+export type UserRole = 'ADMIN';
 
 export interface User {
   id: string;
@@ -12,7 +12,8 @@ export interface User {
 export interface Client {
   id: string;
   name: string;
-  cpf: string;
+  // Dado sensível e opcional: o sistema não exige CPF do cliente.
+  cpf?: string | null;
   phone: string;
   whatsapp?: string | null;
   email?: string | null;

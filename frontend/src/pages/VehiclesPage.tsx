@@ -18,13 +18,10 @@ import {
 } from '../services/vehicleService';
 import { getApiErrorMessage } from '../services/api';
 import { useToast } from '../hooks/useToast';
-import { useAuth } from '../hooks/useAuth';
 import type { Vehicle } from '../types';
 
 export function VehiclesPage() {
-  const { hasRole } = useAuth();
   const { showToast } = useToast();
-  const canManage = hasRole('ADMIN', 'ATENDENTE');
 
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [search, setSearch] = useState('');
@@ -94,41 +91,40 @@ export function VehiclesPage() {
   return (
     <div>
       <PageHeader
+        eyebrow="Operação"
         title="Veículos"
         description="Todos os veículos cadastrados na oficina."
         action={
-          canManage && (
-            <Button
-              onClick={() => {
-                setEditingVehicle(null);
-                setIsModalOpen(true);
-              }}
-            >
-              <Plus size={18} /> Novo veículo
-            </Button>
-          )
+          <Button
+            onClick={() => {
+              setEditingVehicle(null);
+              setIsModalOpen(true);
+            }}
+          >
+            <Plus size={18} /> Novo veículo
+          </Button>
         }
       />
 
-      <div className="mb-4 max-w-sm">
+      <Card className="mb-4 max-w-sm p-3">
         <label htmlFor="vehicle-search" className="sr-only">
           Buscar veículos
         </label>
         <div className="relative">
-          <Search size={18} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             id="vehicle-search"
             type="search"
             placeholder="Buscar por placa, marca ou modelo"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="min-h-[44px] w-full rounded-lg border border-slate-300 py-2 pl-10 pr-3 text-sm focus:border-brand-600"
+            className="min-h-[40px] w-full rounded border border-slate-300 py-2 pl-9 pr-3 text-sm focus:border-brand-600"
           />
         </div>
-      </div>
+      </Card>
 
       {error && (
-        <div role="alert" className="mb-4 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
           <AlertCircle size={18} aria-hidden="true" />
           {error}
         </div>
@@ -140,7 +136,11 @@ export function VehiclesPage() {
             <TableSkeleton rows={6} cols={5} />
           </div>
         ) : vehicles.length === 0 ? (
-          <EmptyState icon={CarIcon} title="Nenhum veículo encontrado" />
+          <EmptyState
+            icon={CarIcon}
+            title="Nenhum veículo encontrado"
+            description="Ajuste a busca ou cadastre o primeiro veículo de um cliente."
+          />
         ) : (
           <div className="table-scroll">
             <table className="w-full text-left text-sm">
@@ -156,7 +156,7 @@ export function VehiclesPage() {
               <tbody className="divide-y divide-slate-100">
                 {vehicles.map((vehicle) => (
                   <tr key={vehicle.id} className="hover:bg-slate-50">
-                    <td className="px-5 py-3 font-medium text-slate-800">
+                    <td className="px-5 py-3 font-mono font-medium text-slate-800">
                       <Link to={`/veiculos/${vehicle.id}`} className="hover:underline">
                         {vehicle.plate}
                       </Link>
@@ -167,32 +167,28 @@ export function VehiclesPage() {
                     <td className="px-5 py-3 text-slate-600">
                       {'client' in vehicle && vehicle.client ? (vehicle.client as { name: string }).name : '—'}
                     </td>
-                    <td className="px-5 py-3 text-slate-600">{vehicle.year}</td>
+                    <td className="tabular px-5 py-3 text-slate-600">{vehicle.year}</td>
                     <td className="px-5 py-3">
                       <div className="flex justify-end gap-1">
-                        {canManage && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setEditingVehicle(vehicle);
-                              setIsModalOpen(true);
-                            }}
-                            aria-label={`Editar ${vehicle.plate}`}
-                            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-brand-700"
-                          >
-                            <Pencil size={16} />
-                          </button>
-                        )}
-                        {hasRole('ADMIN') && (
-                          <button
-                            type="button"
-                            onClick={() => setDeletingVehicle(vehicle)}
-                            aria-label={`Remover ${vehicle.plate}`}
-                            className="rounded-lg p-2 text-slate-500 hover:bg-red-50 hover:text-red-600"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        )}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingVehicle(vehicle);
+                            setIsModalOpen(true);
+                          }}
+                          aria-label={`Editar ${vehicle.plate}`}
+                          className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-brand-700"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDeletingVehicle(vehicle)}
+                          aria-label={`Remover ${vehicle.plate}`}
+                          className="rounded-lg p-2 text-slate-500 hover:bg-status-danger-soft hover:text-status-danger"
+                        >
+                          <Trash2 size={16} />
+                        </button>
                       </div>
                     </td>
                   </tr>
