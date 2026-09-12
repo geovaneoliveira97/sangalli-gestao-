@@ -11,9 +11,42 @@
       content="Sangalli Gestão - Sistema de gestão para oficina mecânica e funilaria: ordens de serviço, orçamentos e acompanhamento do cliente."
     />
     <title>Sangalli Gestão — Oficina Mecânica e Funilaria</title>
+    <style>
+      /*
+        Indicador exibido antes mesmo do JavaScript do app carregar — some
+        sozinho assim que o React assume o #root (que substitui todo o
+        conteúdo dele). Numa conexão lenta, evita a sensação de "tela preta
+        travada" entre a splash screen do PWA e o app de fato aparecer.
+      */
+      #initial-loader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #15130f;
+      }
+      #initial-loader .spinner {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 4px solid #494339;
+        border-top-color: #b15f22;
+        animation: initial-loader-spin 0.8s linear infinite;
+      }
+      @keyframes initial-loader-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="initial-loader" role="status" aria-label="Carregando">
+        <div class="spinner"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
