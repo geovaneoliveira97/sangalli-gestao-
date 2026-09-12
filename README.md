@@ -191,7 +191,6 @@ autocontrol/
 │   ├── prisma/           schema.prisma e seed.ts
 │   └── tests/            Testes de integração (Vitest + Supertest)
 │
-├── docker-compose.yml    (legado — MySQL local; o projeto usa PostgreSQL/Supabase, ver abaixo)
 └── README.md
 ```
 
@@ -221,10 +220,6 @@ Crie um projeto gratuito em [supabase.com](https://supabase.com) (região São P
 Connection String (modo *pooling*, porta 6543, e a *Direct connection*, porta 5432) na aba
 Database do painel. Cole essas URLs em `DATABASE_URL` e `DIRECT_URL` no `.env` do backend — o
 Prisma usa a primeira para consultas normais e a segunda para rodar migrations.
-
-> Nota: `docker-compose.yml` ainda sobe um MySQL local, mas é um resquício de uma versão anterior
-> do projeto — o schema atual (`backend/prisma/schema.prisma`) já está configurado para
-> PostgreSQL e não é compatível com esse container.
 
 ## Variáveis de ambiente
 
