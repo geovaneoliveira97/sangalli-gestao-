@@ -15,15 +15,17 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-    # Liberações para o widget VLibras (https://vlibras.gov.br):
-    # - script-src: o plugin vem do domínio do governo e o avatar 3D roda em
-    #   Unity WebGL, que exige 'unsafe-eval' e 'wasm-unsafe-eval';
+    # Liberações para o widget VLibras:
+    # - vlibras.gov.br redireciona os arquivos (scripts, imagens, CSS) para o
+    #   CDN jsDelivr; liberamos só o caminho do repositório oficial
+    #   (gh/spbgovbr-vlibras/), não o jsDelivr inteiro;
+    # - frame-src: o avatar 3D (Unity) roda num iframe próprio servido por
+    #   vlibras.gov.br, por isso a página não precisa de 'unsafe-eval';
     # - style-src 'unsafe-inline': o plugin injeta estilos na página. Isso
     #   também cobre o <style> do indicador de carregamento do index.html
     #   (com 'unsafe-inline' presente não pode haver hash, senão o navegador
-    #   ignora o 'unsafe-inline');
-    # - img/font/media/worker: imagens, fontes e recursos do avatar.
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://vlibras.gov.br; style-src 'self' 'unsafe-inline' https://vlibras.gov.br; img-src 'self' data: blob: https://res.cloudinary.com https://vlibras.gov.br; connect-src 'self' https:; font-src 'self' data: https://vlibras.gov.br; media-src 'self' blob: https://vlibras.gov.br; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+    #   ignora o 'unsafe-inline').
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://vlibras.gov.br https://cdn.jsdelivr.net/gh/spbgovbr-vlibras/; style-src 'self' 'unsafe-inline' https://vlibras.gov.br https://cdn.jsdelivr.net/gh/spbgovbr-vlibras/; img-src 'self' data: blob: https://res.cloudinary.com https://vlibras.gov.br https://cdn.jsdelivr.net/gh/spbgovbr-vlibras/; connect-src 'self' https:; font-src 'self' data: https://vlibras.gov.br https://cdn.jsdelivr.net/gh/spbgovbr-vlibras/; frame-src https://vlibras.gov.br https://cdn.jsdelivr.net/gh/spbgovbr-vlibras/; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
 
 # O service worker do PWA não pode ser cacheado por muito tempo
