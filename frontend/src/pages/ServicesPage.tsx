@@ -124,7 +124,7 @@ export function ServicesPage() {
       />
 
       {error && (
-        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
+        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-error/30 bg-error-container px-4 py-3 text-body-medium text-error">
           <AlertCircle size={18} aria-hidden="true" />
           {error}
         </div>
@@ -139,8 +139,8 @@ export function ServicesPage() {
           <EmptyState icon={Wrench} title="Nenhum serviço cadastrado" description="Cadastre os serviços oferecidos para agilizar a montagem de orçamentos." />
         ) : (
           <div className="table-scroll">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
+            <table className="w-full text-left text-body-medium">
+              <thead className="border-b border-outline-variant text-label-medium text-on-surface-variant">
                 <tr>
                   <th scope="col" className="px-5 py-3">Nome</th>
                   <th scope="col" className="px-5 py-3">Valor padrão</th>
@@ -148,20 +148,20 @@ export function ServicesPage() {
                   {canManage && <th scope="col" className="px-5 py-3 text-right">Ações</th>}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-outline-variant">
                 {services.map((service) => (
-                  <tr key={service.id} className="hover:bg-slate-50">
+                  <tr key={service.id} className="hover:bg-surface-container-high">
                     <td className="px-5 py-3">
-                      <p className="font-medium text-slate-800">{service.name}</p>
-                      {service.description && <p className="text-xs text-slate-500">{service.description}</p>}
+                      <p className="font-medium text-on-surface">{service.name}</p>
+                      {service.description && <p className="text-body-small text-on-surface-variant">{service.description}</p>}
                     </td>
-                    <td className="tabular px-5 py-3 text-slate-600">{formatCurrency(service.defaultPrice)}</td>
+                    <td className="tabular px-5 py-3 text-on-surface-variant">{formatCurrency(service.defaultPrice)}</td>
                     <td className="px-5 py-3">
                       <Badge
                         className={
                           service.active
-                            ? 'border-status-success/30 bg-status-success-soft text-status-success'
-                            : 'border-slate-300 bg-slate-100 text-slate-600'
+                            ? 'border-success/30 bg-success-container text-success'
+                            : 'border-outline bg-surface-container-high text-on-surface-variant'
                         }
                       >
                         {service.active ? 'Ativo' : 'Inativo'}
@@ -174,17 +174,17 @@ export function ServicesPage() {
                             type="button"
                             onClick={() => openEdit(service)}
                             aria-label={`Editar ${service.name}`}
-                            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-brand-700"
+                            className="icon-button hover:text-primary"
                           >
-                            <Pencil size={16} />
+                            <Pencil size={20} aria-hidden="true" />
                           </button>
                           <button
                             type="button"
                             onClick={() => setDeleting(service)}
                             aria-label={`Remover ${service.name}`}
-                            className="rounded-lg p-2 text-slate-500 hover:bg-status-danger-soft hover:text-status-danger"
+                            className="icon-button hover:bg-error-container hover:text-error"
                           >
-                            <Trash2 size={16} />
+                            <Trash2 size={20} aria-hidden="true" />
                           </button>
                         </div>
                       </td>
@@ -219,16 +219,16 @@ export function ServicesPage() {
             value={values.defaultPrice}
             onChange={(e) => setValues((v) => ({ ...v, defaultPrice: Number(e.target.value) }))}
           />
-          <label className="flex items-center gap-2 text-sm text-slate-700">
+          <label className="flex min-h-12 items-center gap-3 text-body-medium text-on-surface">
             <input
               type="checkbox"
               checked={values.active}
               onChange={(e) => setValues((v) => ({ ...v, active: e.target.checked }))}
-              className="h-4 w-4 rounded border-slate-300"
+              className="h-5 w-5 accent-primary"
             />
             Serviço ativo
           </label>
-          <div className="flex justify-end gap-3 border-t border-slate-200 pt-4">
+          <div className="flex justify-end gap-3 border-t border-outline-variant pt-4">
             <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>
               Cancelar
             </Button>

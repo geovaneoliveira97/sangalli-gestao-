@@ -15,7 +15,7 @@ export function StatusBadge({ status, compact = false }: StatusBadgeProps) {
   return (
     <Badge className={`${classes.border} ${classes.bg} ${classes.text}`}>
       <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${classes.dot}`} aria-hidden="true" />
-      {!compact && <span className="font-mono text-[10px] font-semibold tracking-wide opacity-80">{STATUS_STAGE_CODE[status]}</span>}
+      {!compact && <span className="font-mono text-label-medium opacity-80">{STATUS_STAGE_CODE[status]}</span>}
       {STATUS_LABELS[status]}
     </Badge>
   );

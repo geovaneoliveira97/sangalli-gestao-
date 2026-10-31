@@ -108,7 +108,7 @@ export function UsersPage() {
       />
 
       {error && (
-        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
+        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-error/30 bg-error-container px-4 py-3 text-body-medium text-error">
           <AlertCircle size={18} aria-hidden="true" />
           {error}
         </div>
@@ -123,8 +123,8 @@ export function UsersPage() {
           <EmptyState icon={UserCog} title="Nenhum usuário cadastrado" description="Cadastre os funcionários que terão acesso ao sistema." />
         ) : (
           <div className="table-scroll">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
+            <table className="w-full text-left text-body-medium">
+              <thead className="border-b border-outline-variant text-label-medium text-on-surface-variant">
                 <tr>
                   <th scope="col" className="px-5 py-3">Nome</th>
                   <th scope="col" className="px-5 py-3">E-mail</th>
@@ -132,17 +132,17 @@ export function UsersPage() {
                   <th scope="col" className="px-5 py-3 text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-outline-variant">
                 {users.map((user) => (
-                  <tr key={user.id} className="hover:bg-slate-50">
-                    <td className="px-5 py-3 font-medium text-slate-800">{user.name}</td>
-                    <td className="px-5 py-3 text-slate-600">{user.email}</td>
+                  <tr key={user.id} className="hover:bg-surface-container-high">
+                    <td className="px-5 py-3 font-medium text-on-surface">{user.name}</td>
+                    <td className="px-5 py-3 text-on-surface-variant">{user.email}</td>
                     <td className="px-5 py-3">
                       <Badge
                         className={
                           user.active
-                            ? 'border-status-success/30 bg-status-success-soft text-status-success'
-                            : 'border-slate-300 bg-slate-100 text-slate-600'
+                            ? 'border-success/30 bg-success-container text-success'
+                            : 'border-outline bg-surface-container-high text-on-surface-variant'
                         }
                       >
                         {user.active ? 'Ativo' : 'Inativo'}
@@ -154,15 +154,15 @@ export function UsersPage() {
                           type="button"
                           onClick={() => openEdit(user)}
                           aria-label={`Editar ${user.name}`}
-                          className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-brand-700"
+                          className="icon-button hover:text-primary"
                         >
-                          <Pencil size={16} />
+                          <Pencil size={20} aria-hidden="true" />
                         </button>
                         {user.id !== currentUser?.id && (
                           <button
                             type="button"
                             onClick={() => handleToggleActive(user)}
-                            className="rounded-lg px-2 py-1 text-xs font-medium text-slate-500 hover:bg-slate-100"
+                            className="min-h-12 rounded-full px-3 text-label-large text-primary hover:bg-primary/10"
                           >
                             {user.active ? 'Desativar' : 'Reativar'}
                           </button>
@@ -200,7 +200,7 @@ export function UsersPage() {
             onChange={(e) => setValues((v) => ({ ...v, password: e.target.value }))}
             hint="Mínimo de 6 caracteres."
           />
-          <div className="flex justify-end gap-3 border-t border-slate-200 pt-4">
+          <div className="flex justify-end gap-3 border-t border-outline-variant pt-4">
             <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>
               Cancelar
             </Button>

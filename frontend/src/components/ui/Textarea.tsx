@@ -1,4 +1,10 @@
 import { forwardRef, useId, type TextareaHTMLAttributes } from 'react';
+import {
+  FIELD_LABEL_RESTING,
+  FIELD_PLACEHOLDER_CLASS,
+  fieldControlClass,
+  fieldLabelClass,
+} from './fieldStyles';
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
@@ -6,36 +12,32 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, error, id, className = '', required, ...props }, ref) => {
+  ({ label, error, id, className = '', required, placeholder, ...props }, ref) => {
     const generatedId = useId();
     const textareaId = id ?? generatedId;
     const errorId = `${textareaId}-error`;
 
     return (
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor={textareaId} className="text-sm font-medium text-slate-700">
-          {label}
-          {required && (
-            <span className="text-status-danger" aria-hidden="true">
-              {' '}
-              *
-            </span>
-          )}
-        </label>
-        <textarea
-          ref={ref}
-          id={textareaId}
-          required={required}
-          aria-invalid={Boolean(error)}
-          aria-describedby={error ? errorId : undefined}
-          rows={3}
-          className={`w-full rounded border px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 ${
-            error ? 'border-status-danger focus:border-status-danger' : 'border-slate-300 focus:border-brand-600'
-          } ${className}`}
-          {...props}
-        />
+      <div className="flex flex-col gap-1">
+        <div className="relative">
+          <textarea
+            ref={ref}
+            id={textareaId}
+            required={required}
+            placeholder={placeholder || ' '}
+            aria-invalid={Boolean(error)}
+            aria-describedby={error ? errorId : undefined}
+            rows={3}
+            className={`block px-4 py-4 ${fieldControlClass(Boolean(error))} ${FIELD_PLACEHOLDER_CLASS} ${className}`}
+            {...props}
+          />
+          <label htmlFor={textareaId} className={`${fieldLabelClass(Boolean(error))} ${FIELD_LABEL_RESTING}`}>
+            {label}
+            {required && <span aria-hidden="true"> *</span>}
+          </label>
+        </div>
         {error && (
-          <p id={errorId} className="text-xs font-medium text-status-danger" role="alert">
+          <p id={errorId} className="px-4 text-body-small text-error" role="alert">
             {error}
           </p>
         )}

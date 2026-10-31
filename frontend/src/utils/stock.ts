@@ -8,7 +8,7 @@ export function isLowStock(part: Pick<Part, 'stock'>): boolean {
 }
 
 export function stockBadgeClass(stock: number): string {
-  if (stock > LOW_STOCK_THRESHOLD) return 'border-status-success/30 bg-status-success-soft text-status-success';
-  if (stock > 0) return 'border-status-warning/40 bg-status-warning-soft text-status-warning';
-  return 'border-status-danger/30 bg-status-danger-soft text-status-danger';
+  if (stock > LOW_STOCK_THRESHOLD) return 'border-success/30 bg-success-container text-success';
+  if (stock > 0) return 'border-warning/40 bg-warning-container text-warning';
+  return 'border-error/30 bg-error-container text-error';
 }

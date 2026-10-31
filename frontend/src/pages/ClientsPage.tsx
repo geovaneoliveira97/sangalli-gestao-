@@ -115,20 +115,20 @@ export function ClientsPage() {
           Buscar clientes
         </label>
         <div className="relative">
-          <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
           <input
             id="client-search"
             type="search"
             placeholder="Buscar por nome ou telefone"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="min-h-[40px] w-full rounded border border-slate-300 py-2 pl-9 pr-3 text-sm focus:border-brand-600"
+            className="min-h-12 w-full rounded border border-outline py-2 pl-9 pr-3 text-body-medium focus:border-primary"
           />
         </div>
       </Card>
 
       {error && (
-        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
+        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-error/30 bg-error-container px-4 py-3 text-body-medium text-error">
           <AlertCircle size={18} aria-hidden="true" />
           {error}
         </div>
@@ -152,8 +152,8 @@ export function ClientsPage() {
           />
         ) : (
           <div className="table-scroll">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
+            <table className="w-full text-left text-body-medium">
+              <thead className="border-b border-outline-variant text-label-medium text-on-surface-variant">
                 <tr>
                   <th scope="col" className="px-5 py-3">Nome</th>
                   <th scope="col" className="px-5 py-3">Telefone</th>
@@ -161,33 +161,33 @@ export function ClientsPage() {
                   <th scope="col" className="px-5 py-3 text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-outline-variant">
                 {clients.map((client) => (
-                  <tr key={client.id} className="hover:bg-slate-50">
-                    <td className="px-5 py-3 font-medium text-slate-800">
-                      <Link to={`/clientes/${client.id}`} className="hover:underline">
+                  <tr key={client.id} className="hover:bg-surface-container-high">
+                    <td className="px-5 py-3 font-medium text-on-surface">
+                      <Link to={`/clientes/${client.id}`} className="touch-target hover:underline">
                         {client.name}
                       </Link>
                     </td>
-                    <td className="tabular px-5 py-3 text-slate-600">{client.phone}</td>
-                    <td className="px-5 py-3 text-slate-600">{client._count?.vehicles ?? 0}</td>
+                    <td className="tabular px-5 py-3 text-on-surface-variant">{client.phone}</td>
+                    <td className="px-5 py-3 text-on-surface-variant">{client._count?.vehicles ?? 0}</td>
                     <td className="px-5 py-3">
                       <div className="flex justify-end gap-1">
                         <button
                           type="button"
                           onClick={() => openEdit(client)}
                           aria-label={`Editar ${client.name}`}
-                          className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-brand-700"
+                          className="icon-button hover:text-primary"
                         >
-                          <Pencil size={16} />
+                          <Pencil size={20} aria-hidden="true" />
                         </button>
                         <button
                           type="button"
                           onClick={() => setDeletingClient(client)}
                           aria-label={`Remover ${client.name}`}
-                          className="rounded-lg p-2 text-slate-500 hover:bg-status-danger-soft hover:text-status-danger"
+                          className="icon-button hover:bg-error-container hover:text-error"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={20} aria-hidden="true" />
                         </button>
                       </div>
                     </td>

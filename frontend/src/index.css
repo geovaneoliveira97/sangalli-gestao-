@@ -8,12 +8,11 @@
   }
 
   * {
-    @apply border-slate-200;
+    @apply border-outline-variant;
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
-    font-feature-settings: 'cv05', 'ss01';
+    @apply bg-background text-body-medium text-on-background antialiased;
   }
 
   /* Números tabulares para placas, valores e códigos de OS — colunas alinham. */
@@ -23,9 +22,8 @@
 
   /* Foco visível para navegação por teclado (acessibilidade) */
   :focus-visible {
-    outline: 2px solid #984E1A;
+    outline: 2px solid theme('colors.primary');
     outline-offset: 2px;
-    border-radius: 3px;
   }
 
   /* Rolagem horizontal para tabelas em telas pequenas, sem vazar da página */
@@ -36,14 +34,30 @@
 
 @layer components {
   .skip-link {
-    @apply sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-slate-950 focus:px-4 focus:py-2 focus:text-white;
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-on-surface focus:px-4 focus:py-2 focus:text-surface;
   }
 
-  /* Rótulo técnico em caixa alta usado para seções, kickers e metadados
-     (ex.: "IDENTIFICAÇÃO DO VEÍCULO", "STATUS ATUAL"). Reaproveitado em
-     PageHeader, SectionCard e nas etiquetas de status. */
+  /* Rótulo curto de seções e metadados (ex.: "Identificação do veículo").
+     Reaproveitado em PageHeader, SectionCard e nos documentos impressos. */
   .eyebrow {
-    @apply text-xs font-semibold uppercase tracking-[0.08em] text-slate-500;
+    @apply text-label-medium text-on-surface-variant;
+  }
+
+  /* Botão só de ícone, com a área de toque de 48px recomendada pelo Material 3. */
+  .icon-button {
+    @apply inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-on-surface/10;
+  }
+
+  /* Amplia a área de toque de controles que têm menos de 48px de altura visual. */
+  .touch-target {
+    @apply relative after:absolute after:inset-x-0 after:top-1/2 after:h-12 after:-translate-y-1/2 after:content-[''];
+  }
+
+  /* Rótulo flutuante do campo de texto: a metade inferior usa a cor do campo e
+     interrompe a borda; a superior é transparente, para combinar com qualquer
+     superfície em volta (branca ou surface-container). */
+  .field-label {
+    background: linear-gradient(to bottom, transparent 45%, theme('colors.surface') 45%);
   }
 }
 

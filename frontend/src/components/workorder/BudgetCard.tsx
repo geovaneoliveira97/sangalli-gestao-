@@ -16,22 +16,22 @@ export function BudgetCard({ workOrder, canManage, onRemoveService, onRemovePart
   return (
     <div>
       {workOrder.services.length === 0 && workOrder.parts.length === 0 && Number(workOrder.laborCost) === 0 ? (
-        <p className="text-sm text-slate-500">Nenhum item adicionado ainda.</p>
+        <p className="text-body-medium text-on-surface-variant">Nenhum item adicionado ainda.</p>
       ) : (
-        <ul className="mb-4 divide-y divide-slate-100 text-sm">
+        <ul className="mb-4 divide-y divide-outline-variant text-body-medium">
           {workOrder.services.map((item) => (
             <li key={item.id} className="flex items-center justify-between gap-2 py-2">
-              <span className="text-slate-700">{item.service.name}</span>
+              <span className="text-on-surface">{item.service.name}</span>
               <span className="flex items-center gap-2">
-                <span className="tabular font-medium text-slate-800">{formatCurrency(item.price)}</span>
+                <span className="tabular font-medium text-on-surface">{formatCurrency(item.price)}</span>
                 {canManage && (
                   <button
                     type="button"
                     onClick={() => onRemoveService(item.id)}
                     aria-label={`Remover serviço ${item.service.name}`}
-                    className="rounded p-1 text-slate-400 hover:bg-status-danger-soft hover:text-status-danger"
+                    className="icon-button hover:bg-error-container hover:text-error"
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={20} aria-hidden="true" />
                   </button>
                 )}
               </span>
@@ -39,11 +39,11 @@ export function BudgetCard({ workOrder, canManage, onRemoveService, onRemovePart
           ))}
           {workOrder.parts.map((item) => (
             <li key={item.id} className="flex items-center justify-between gap-2 py-2">
-              <span className="text-slate-700">
-                {item.part.name} <span className="text-xs text-slate-400">x{item.quantity}</span>
+              <span className="text-on-surface">
+                {item.part.name} <span className="text-body-small text-on-surface-variant">x{item.quantity}</span>
               </span>
               <span className="flex items-center gap-2">
-                <span className="tabular font-medium text-slate-800">
+                <span className="tabular font-medium text-on-surface">
                   {formatCurrency(Number(item.unitPrice) * item.quantity)}
                 </span>
                 {canManage && (
@@ -51,9 +51,9 @@ export function BudgetCard({ workOrder, canManage, onRemoveService, onRemovePart
                     type="button"
                     onClick={() => onRemovePart(item.id)}
                     aria-label={`Remover peça ${item.part.name}`}
-                    className="rounded p-1 text-slate-400 hover:bg-status-danger-soft hover:text-status-danger"
+                    className="icon-button hover:bg-error-container hover:text-error"
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={20} aria-hidden="true" />
                   </button>
                 )}
               </span>
@@ -61,34 +61,34 @@ export function BudgetCard({ workOrder, canManage, onRemoveService, onRemovePart
           ))}
           {Number(workOrder.laborCost) > 0 && (
             <li className="flex items-center justify-between gap-2 py-2">
-              <span className="text-slate-700">Mão de obra</span>
-              <span className="tabular font-medium text-slate-800">{formatCurrency(workOrder.laborCost)}</span>
+              <span className="text-on-surface">Mão de obra</span>
+              <span className="tabular font-medium text-on-surface">{formatCurrency(workOrder.laborCost)}</span>
             </li>
           )}
         </ul>
       )}
 
-      <div className="space-y-1.5 border-t border-slate-200 pt-4 text-sm">
-        <div className="flex justify-between text-base font-bold text-slate-900">
+      <div className="space-y-2 border-t border-outline-variant pt-4 text-body-medium">
+        <div className="flex justify-between text-body-large font-medium text-on-surface">
           <span>Total</span>
           <span className="tabular">{formatCurrency(totals.total)}</span>
         </div>
-        <div className="flex justify-between text-status-success">
+        <div className="flex justify-between text-success">
           <span>Pago</span>
           <span className="tabular">{formatCurrency(totals.paid)}</span>
         </div>
-        <div className="flex justify-between font-medium text-status-warning">
+        <div className="flex justify-between font-medium text-warning">
           <span>Restante</span>
           <span className="tabular">{formatCurrency(totals.remaining)}</span>
         </div>
       </div>
 
       {workOrder.payments.length > 0 && (
-        <div className="mt-4 border-t border-slate-200 pt-4">
+        <div className="mt-4 border-t border-outline-variant pt-4">
           <p className="eyebrow mb-2">Pagamentos</p>
-          <ul className="space-y-1.5 text-sm">
+          <ul className="space-y-2 text-body-medium">
             {workOrder.payments.map((payment) => (
-              <li key={payment.id} className="flex justify-between text-slate-600">
+              <li key={payment.id} className="flex justify-between text-on-surface-variant">
                 <span>{PAYMENT_METHOD_LABELS[payment.method]}</span>
                 <span className="tabular">{formatCurrency(payment.amount)}</span>
               </li>

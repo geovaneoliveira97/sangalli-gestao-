@@ -93,7 +93,7 @@ export function NewWorkOrderPage() {
       <button
         type="button"
         onClick={() => navigate('/ordens')}
-        className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-brand-700"
+        className="mb-4 inline-flex min-h-12 items-center gap-2 text-label-large text-primary hover:underline"
       >
         <ArrowLeft size={16} /> Voltar para ordens de serviço
       </button>
@@ -169,13 +169,13 @@ export function NewWorkOrderPage() {
           />
 
           {error && (
-            <div role="alert" className="flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
+            <div role="alert" className="flex items-center gap-2 rounded border border-error/30 bg-error-container px-4 py-3 text-body-medium text-error">
               <AlertCircle size={18} aria-hidden="true" />
               {error}
             </div>
           )}
 
-          <div className="flex justify-end gap-3 border-t border-slate-200 pt-4">
+          <div className="flex justify-end gap-3 border-t border-outline-variant pt-4">
             <Button type="button" variant="secondary" onClick={() => navigate('/ordens')}>
               Cancelar
             </Button>

@@ -65,7 +65,7 @@ export function ClientDetailPage() {
 
   if (error || !client) {
     return (
-      <div role="alert" className="flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
+      <div role="alert" className="flex items-center gap-2 rounded border border-error/30 bg-error-container px-4 py-3 text-body-medium text-error">
         <AlertCircle size={18} aria-hidden="true" />
         {error || 'Cliente não encontrado.'}
       </div>
@@ -81,7 +81,7 @@ export function ClientDetailPage() {
       <button
         type="button"
         onClick={() => navigate('/clientes')}
-        className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-brand-700"
+        className="mb-4 inline-flex min-h-12 items-center gap-2 text-label-large text-primary hover:underline"
       >
         <ArrowLeft size={16} /> Voltar para clientes
       </button>
@@ -94,20 +94,20 @@ export function ClientDetailPage() {
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <SectionCard eyebrow="Contato" title="Dados de contato" className="lg:col-span-1">
-          <ul className="space-y-3 text-sm text-slate-700">
+          <ul className="space-y-3 text-body-medium text-on-surface">
             <li className="flex items-start gap-2">
-              <Phone size={16} className="mt-0.5 shrink-0 text-slate-400" aria-hidden="true" />
+              <Phone size={16} className="mt-0.5 shrink-0 text-on-surface-variant" aria-hidden="true" />
               <span className="tabular">{client.phone}</span>
             </li>
             {client.email && (
               <li className="flex items-start gap-2">
-                <Mail size={16} className="mt-0.5 shrink-0 text-slate-400" aria-hidden="true" />
+                <Mail size={16} className="mt-0.5 shrink-0 text-on-surface-variant" aria-hidden="true" />
                 <span>{client.email}</span>
               </li>
             )}
             {address && (
               <li className="flex items-start gap-2">
-                <MapPin size={16} className="mt-0.5 shrink-0 text-slate-400" aria-hidden="true" />
+                <MapPin size={16} className="mt-0.5 shrink-0 text-on-surface-variant" aria-hidden="true" />
                 <span>
                   {address}
                   {client.zipCode ? ` — CEP ${client.zipCode}` : ''}
@@ -139,14 +139,14 @@ export function ClientDetailPage() {
                 <li key={vehicle.id}>
                   <Link
                     to={`/veiculos/${vehicle.id}`}
-                    className="flex items-start gap-3 rounded border border-slate-200 p-3 hover:border-brand-300 hover:bg-brand-50/40"
+                    className="flex items-start gap-3 rounded border border-outline-variant p-3 hover:border-primary hover:bg-primary-container/40"
                   >
-                    <Car size={18} className="mt-0.5 shrink-0 text-brand-700" aria-hidden="true" />
+                    <Car size={18} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
                     <div>
-                      <p className="font-medium text-slate-800">
+                      <p className="font-medium text-on-surface">
                         {vehicle.brand} {vehicle.model}
                       </p>
-                      <p className="tabular text-sm text-slate-500">
+                      <p className="tabular text-body-medium text-on-surface-variant">
                         <span className="font-mono">{vehicle.plate}</span> · {vehicle.year}
                       </p>
                     </div>

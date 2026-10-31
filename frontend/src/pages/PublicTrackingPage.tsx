@@ -32,14 +32,14 @@ export function PublicTrackingPage() {
   }, [token]);
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      <header className="flex items-center gap-2.5 border-b border-white/10 px-4 py-4">
-        <div className="flex h-8 w-8 items-center justify-center rounded bg-brand-600 text-white">
-          <Wrench size={16} aria-hidden="true" />
+    <div className="min-h-screen bg-surface">
+      <header className="flex items-center gap-3 border-b border-outline-variant px-4 py-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-container text-on-primary-container">
+          <Wrench size={20} aria-hidden="true" />
         </div>
         <div>
-          <p className="text-sm font-bold leading-none text-white">Sangalli Gestão</p>
-          <p className="mt-0.5 text-[11px] leading-none text-slate-400">Acompanhamento de OS</p>
+          <p className="text-title-small text-on-surface">Sangalli Gestão</p>
+          <p className="text-body-small text-on-surface-variant">Acompanhamento de OS</p>
         </div>
       </header>
 
@@ -47,7 +47,7 @@ export function PublicTrackingPage() {
         {isLoading && (
           <div className="mt-10 flex justify-center">
             <div
-              className="h-9 w-9 animate-spin rounded-full border-4 border-slate-700 border-t-brand-500"
+              className="h-9 w-9 animate-spin rounded-full border-4 border-outline-variant border-t-primary"
               role="status"
               aria-label="Carregando informações"
             />
@@ -55,7 +55,7 @@ export function PublicTrackingPage() {
         )}
 
         {!isLoading && error && (
-          <div role="alert" className="mt-10 flex items-start gap-2 rounded-md bg-status-danger/10 p-4 text-sm text-red-200">
+          <div role="alert" className="mt-10 flex items-start gap-2 rounded-md bg-error-container p-4 text-body-medium text-on-error-container">
             <AlertCircle size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
             <p>{error}</p>
           </div>
@@ -63,12 +63,12 @@ export function PublicTrackingPage() {
 
         {!isLoading && data && (
           <div className="space-y-4">
-            <section className="rounded-md border border-slate-800 bg-white p-5">
+            <section className="rounded-md bg-surface-container p-5">
               <p className="eyebrow">Seu veículo</p>
-              <h1 className="text-xl font-bold text-slate-900">
+              <h1 className="text-title-large font-medium text-on-surface">
                 {data.vehicle.brand} {data.vehicle.model}
               </h1>
-              <p className="tabular text-sm text-slate-500">
+              <p className="tabular text-body-medium text-on-surface-variant">
                 {data.vehicle.plate} · {data.vehicle.color} · {data.vehicle.year}
               </p>
 
@@ -81,56 +81,56 @@ export function PublicTrackingPage() {
                 />
                 <div>
                   <p className="eyebrow">Status atual · OS #{data.number}</p>
-                  <p className={`text-base font-bold ${TONE_CLASSES[STATUS_TONE[data.status]].text}`}>
+                  <p className={`text-body-large font-medium ${TONE_CLASSES[STATUS_TONE[data.status]].text}`}>
                     {STATUS_LABELS[data.status]}
                   </p>
                 </div>
               </div>
 
               {data.estimatedDelivery && (
-                <div className="mt-3 flex items-center gap-2 text-sm text-slate-600">
-                  <Calendar size={16} className="text-slate-400" aria-hidden="true" />
+                <div className="mt-3 flex items-center gap-2 text-body-medium text-on-surface-variant">
+                  <Calendar size={16} className="text-on-surface-variant" aria-hidden="true" />
                   Previsão de entrega: <strong className="tabular">{formatDate(data.estimatedDelivery)}</strong>
                 </div>
               )}
             </section>
 
             {data.status !== 'CANCELADO' && (
-              <section className="rounded-md border border-slate-800 bg-white p-5">
-                <h2 className="mb-4 text-sm font-semibold text-slate-900">Linha do tempo</h2>
+              <section className="rounded-md bg-surface-container p-5">
+                <h2 className="mb-4 text-body-medium font-medium text-on-surface">Linha do tempo</h2>
                 <PublicTimeline status={data.status} history={data.statusHistory} />
               </section>
             )}
 
             {(data.services.length > 0 || data.parts.length > 0) && (
-              <section className="rounded-md border border-slate-800 bg-white p-5">
-                <h2 className="mb-3 text-sm font-semibold text-slate-900">Serviços e peças</h2>
-                <ul className="divide-y divide-slate-100 text-sm">
+              <section className="rounded-md bg-surface-container p-5">
+                <h2 className="mb-3 text-body-medium font-medium text-on-surface">Serviços e peças</h2>
+                <ul className="divide-y divide-outline-variant text-body-medium">
                   {data.services.map((s, i) => (
                     <li key={`s-${i}`} className="flex justify-between py-2">
-                      <span className="text-slate-700">{s.name}</span>
-                      <span className="tabular font-medium text-slate-800">{formatCurrency(s.price)}</span>
+                      <span className="text-on-surface">{s.name}</span>
+                      <span className="tabular font-medium text-on-surface">{formatCurrency(s.price)}</span>
                     </li>
                   ))}
                   {data.parts.map((p, i) => (
                     <li key={`p-${i}`} className="flex justify-between py-2">
-                      <span className="text-slate-700">
-                        {p.name} <span className="text-xs text-slate-400">x{p.quantity}</span>
+                      <span className="text-on-surface">
+                        {p.name} <span className="text-body-small text-on-surface-variant">x{p.quantity}</span>
                       </span>
-                      <span className="tabular font-medium text-slate-800">{formatCurrency(p.unitPrice * p.quantity)}</span>
+                      <span className="tabular font-medium text-on-surface">{formatCurrency(p.unitPrice * p.quantity)}</span>
                     </li>
                   ))}
                 </ul>
-                <div className="mt-3 space-y-1 border-t border-slate-200 pt-3 text-sm">
-                  <div className="flex justify-between text-base font-bold text-slate-900">
+                <div className="mt-3 space-y-1 border-t border-outline-variant pt-3 text-body-medium">
+                  <div className="flex justify-between text-body-large font-medium text-on-surface">
                     <span>Total</span>
                     <span className="tabular">{formatCurrency(data.totals.total)}</span>
                   </div>
-                  <div className="flex justify-between text-status-success">
+                  <div className="flex justify-between text-success">
                     <span>Pago</span>
                     <span className="tabular">{formatCurrency(data.totals.paid)}</span>
                   </div>
-                  <div className="flex justify-between font-medium text-status-warning">
+                  <div className="flex justify-between font-medium text-warning">
                     <span>Restante</span>
                     <span className="tabular">{formatCurrency(data.totals.remaining)}</span>
                   </div>
@@ -139,8 +139,8 @@ export function PublicTrackingPage() {
             )}
 
             {data.photos.length > 0 && (
-              <section className="rounded-md border border-slate-800 bg-white p-5">
-                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900">
+              <section className="rounded-md bg-surface-container p-5">
+                <h2 className="mb-3 flex items-center gap-2 text-body-medium font-medium text-on-surface">
                   <Camera size={16} aria-hidden="true" /> Fotos
                 </h2>
                 {(['ENTRADA', 'DURANTE', 'FINALIZACAO'] as PhotoCategory[]).map((category) => {
@@ -148,7 +148,7 @@ export function PublicTrackingPage() {
                   if (items.length === 0) return null;
                   return (
                     <div key={category} className="mb-4 last:mb-0">
-                      <p className="mb-2 text-sm font-medium text-slate-600">{PHOTO_CATEGORY_LABELS[category]}</p>
+                      <p className="mb-2 text-body-medium font-medium text-on-surface-variant">{PHOTO_CATEGORY_LABELS[category]}</p>
                       <div className="grid grid-cols-3 gap-2">
                         {items.map((photo, i) => (
                           <img
@@ -167,13 +167,13 @@ export function PublicTrackingPage() {
             )}
 
             {data.publicNotes && (
-              <section className="rounded-md border border-slate-800 bg-white p-5">
-                <h2 className="mb-2 text-sm font-semibold text-slate-900">Observações</h2>
-                <p className="text-sm text-slate-700">{data.publicNotes}</p>
+              <section className="rounded-md bg-surface-container p-5">
+                <h2 className="mb-2 text-body-medium font-medium text-on-surface">Observações</h2>
+                <p className="text-body-medium text-on-surface">{data.publicNotes}</p>
               </section>
             )}
 
-            <p className="flex items-center justify-center gap-1.5 pt-2 text-center text-xs text-slate-500">
+            <p className="flex items-center justify-center gap-2 pt-2 text-center text-body-small text-on-surface-variant">
               <Car size={14} aria-hidden="true" /> Ordem de serviço nº {data.number} · Entrada em{' '}
               {formatDate(data.entryDate)}
             </p>
@@ -206,29 +206,29 @@ function PublicTimeline({
             {!isLast && (
               <span
                 aria-hidden="true"
-                className={`absolute left-[11px] top-6 h-full w-px ${isDone ? 'bg-status-success' : 'bg-slate-200'}`}
+                className={`absolute left-[11px] top-6 h-full w-px ${isDone ? 'bg-success' : 'bg-outline-variant'}`}
               />
             )}
             <span
               aria-hidden="true"
               className={`z-10 mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 ${
                 isDone
-                  ? 'border-status-success bg-status-success text-white'
+                  ? 'border-success bg-success text-on-success'
                   : isCurrent
-                    ? 'border-brand-600 bg-brand-600 text-white'
-                    : 'border-slate-300 bg-white'
+                    ? 'border-primary bg-primary text-on-primary'
+                    : 'border-outline bg-surface'
               }`}
             >
               {isDone && <Check size={12} />}
             </span>
             <div>
-              <p className={`flex items-center gap-1.5 text-sm font-medium ${isCurrent ? 'text-brand-700' : 'text-slate-700'}`}>
-                <span className="font-mono text-[10px] font-semibold tracking-wide text-slate-400">
+              <p className={`flex items-center gap-2 text-body-medium font-medium ${isCurrent ? 'text-primary' : 'text-on-surface'}`}>
+                <span className="font-mono text-label-medium text-on-surface-variant">
                   {STATUS_STAGE_CODE[step]}
                 </span>
                 <span>{STATUS_LABELS[step]}</span>
               </p>
-              {entry && <p className="text-xs text-slate-500">{formatDate(entry.createdAt)}</p>}
+              {entry && <p className="text-body-small text-on-surface-variant">{formatDate(entry.createdAt)}</p>}
             </div>
           </li>
         );

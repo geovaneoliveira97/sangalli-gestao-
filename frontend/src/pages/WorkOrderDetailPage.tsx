@@ -129,7 +129,7 @@ export function WorkOrderDetailPage() {
 
   if (error || !workOrder) {
     return (
-      <div role="alert" className="flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
+      <div role="alert" className="flex items-center gap-2 rounded border border-error/30 bg-error-container px-4 py-3 text-body-medium text-error">
         <AlertCircle size={18} aria-hidden="true" />
         {error || 'Ordem de serviço não encontrada.'}
       </div>
@@ -154,7 +154,7 @@ export function WorkOrderDetailPage() {
       <button
         type="button"
         onClick={() => navigate('/ordens')}
-        className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-brand-700"
+        className="mb-4 inline-flex min-h-12 items-center gap-2 text-label-large text-primary hover:underline"
       >
         <ArrowLeft size={16} /> Voltar para ordens de serviço
       </button>
@@ -164,11 +164,11 @@ export function WorkOrderDetailPage() {
         title={<span className="font-mono">OS-{String(workOrder.number).padStart(4, '0')}</span>}
         description={
           <span className="flex flex-wrap items-center gap-2">
-            <Link to={`/clientes/${client.id}`} className="font-medium text-brand-700 hover:underline">
+            <Link to={`/clientes/${client.id}`} className="font-medium text-primary touch-target hover:underline">
               {client.name}
             </Link>
             <span aria-hidden="true">·</span>
-            <Link to={`/veiculos/${vehicle.id}`} className="hover:underline">
+            <Link to={`/veiculos/${vehicle.id}`} className="touch-target hover:underline">
               {vehicle.brand} {vehicle.model} ({vehicle.plate})
             </Link>
           </span>
@@ -177,7 +177,7 @@ export function WorkOrderDetailPage() {
           <div className="flex flex-wrap items-center gap-2">
             <StatusBadge status={workOrder.status} />
             {overdue && (
-              <span className="flex items-center gap-1.5 rounded border border-status-danger/30 bg-status-danger-soft px-2 py-0.5 text-xs font-semibold text-status-danger">
+              <span className="flex items-center gap-2 rounded border border-error/30 bg-error-container px-2 py-1 text-body-small font-medium text-error">
                 <AlertTriangle size={12} aria-hidden="true" /> {getOverdueDays(workOrder)}d de atraso
               </span>
             )}
@@ -194,40 +194,40 @@ export function WorkOrderDetailPage() {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div className="space-y-5 lg:col-span-2">
           <SectionCard eyebrow="Identificação do veículo" title={`${vehicle.brand} ${vehicle.model}`}>
-            <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
+            <dl className="grid grid-cols-2 gap-3 text-body-medium sm:grid-cols-4">
               <div>
-                <dt className="text-xs text-slate-500">Placa</dt>
-                <dd className="font-mono font-semibold text-slate-800">{vehicle.plate}</dd>
+                <dt className="text-body-small text-on-surface-variant">Placa</dt>
+                <dd className="font-mono font-medium text-on-surface">{vehicle.plate}</dd>
               </div>
               {vehicle.year && (
                 <div>
-                  <dt className="text-xs text-slate-500">Ano</dt>
-                  <dd className="tabular font-medium text-slate-800">{vehicle.year}</dd>
+                  <dt className="text-body-small text-on-surface-variant">Ano</dt>
+                  <dd className="tabular font-medium text-on-surface">{vehicle.year}</dd>
                 </div>
               )}
               {vehicle.color && (
                 <div>
-                  <dt className="text-xs text-slate-500">Cor</dt>
-                  <dd className="font-medium text-slate-800">{vehicle.color}</dd>
+                  <dt className="text-body-small text-on-surface-variant">Cor</dt>
+                  <dd className="font-medium text-on-surface">{vehicle.color}</dd>
                 </div>
               )}
               <div>
-                <dt className="text-xs text-slate-500">Entrada</dt>
-                <dd className="tabular font-medium text-slate-800">{formatDate(workOrder.entryDate)}</dd>
+                <dt className="text-body-small text-on-surface-variant">Entrada</dt>
+                <dd className="tabular font-medium text-on-surface">{formatDate(workOrder.entryDate)}</dd>
               </div>
               <div>
-                <dt className="text-xs text-slate-500">Previsão de entrega</dt>
-                <dd className="tabular font-medium text-slate-800">{formatDate(workOrder.estimatedDelivery)}</dd>
+                <dt className="text-body-small text-on-surface-variant">Previsão de entrega</dt>
+                <dd className="tabular font-medium text-on-surface">{formatDate(workOrder.estimatedDelivery)}</dd>
               </div>
               <div>
-                <dt className="text-xs text-slate-500">Conclusão</dt>
-                <dd className="tabular font-medium text-slate-800">{formatDate(workOrder.completedAt)}</dd>
+                <dt className="text-body-small text-on-surface-variant">Conclusão</dt>
+                <dd className="tabular font-medium text-on-surface">{formatDate(workOrder.completedAt)}</dd>
               </div>
             </dl>
           </SectionCard>
 
           <SectionCard eyebrow="Diagnóstico" title="Problema relatado e diagnóstico técnico">
-            <p className="mb-4 rounded border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
+            <p className="mb-4 rounded bg-surface p-3 text-body-medium text-on-surface">
               {workOrder.problemDescription}
             </p>
 
@@ -327,17 +327,17 @@ export function WorkOrderDetailPage() {
 
         <div className="space-y-5">
           <SectionCard eyebrow="Cliente" title={client.name}>
-            <dl className="space-y-2 text-sm">
+            <dl className="space-y-2 text-body-medium">
               {client.phone && (
                 <div className="flex justify-between">
-                  <dt className="text-slate-500">Telefone</dt>
-                  <dd className="tabular font-medium text-slate-800">{client.phone}</dd>
+                  <dt className="text-on-surface-variant">Telefone</dt>
+                  <dd className="tabular font-medium text-on-surface">{client.phone}</dd>
                 </div>
               )}
               <div className="flex justify-between">
-                <dt className="text-slate-500">Ficha completa</dt>
+                <dt className="text-on-surface-variant">Ficha completa</dt>
                 <dd>
-                  <Link to={`/clientes/${client.id}`} className="font-medium text-brand-700 hover:underline">
+                  <Link to={`/clientes/${client.id}`} className="font-medium text-primary touch-target hover:underline">
                     Ver cliente
                   </Link>
                 </dd>
@@ -349,11 +349,11 @@ export function WorkOrderDetailPage() {
 
           {canManage && (
             <SectionCard eyebrow="Zona de risco" title="Remover ordem de serviço">
-              <p className="mb-3 text-sm text-slate-500">
+              <p className="mb-3 text-body-medium text-on-surface-variant">
                 Remove definitivamente esta OS, incluindo serviços, peças, fotos, pagamentos e histórico de status. Use apenas para corrigir um cadastro feito por engano.
               </p>
               <Button variant="danger" size="sm" onClick={() => setOpenModal('delete')}>
-                <Trash2 size={14} /> Remover esta OS
+                <Trash2 size={16} aria-hidden="true" /> Remover esta OS
               </Button>
             </SectionCard>
           )}

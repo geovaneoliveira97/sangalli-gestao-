@@ -59,7 +59,7 @@ export function AddServiceModal({ isOpen, onClose, onAdd }: AddServiceModalProps
           value={price}
           onChange={(e) => setPrice(e.target.value === '' ? '' : Number(e.target.value))}
         />
-        <div className="flex justify-end gap-3 border-t border-slate-200 pt-4">
+        <div className="flex justify-end gap-3 border-t border-outline-variant pt-4">
           <Button type="button" variant="secondary" onClick={onClose}>
             Cancelar
           </Button>

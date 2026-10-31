@@ -92,7 +92,7 @@ export function DashboardPage() {
       />
 
       {error && (
-        <div role="alert" className="mb-5 flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
+        <div role="alert" className="mb-5 flex items-center gap-2 rounded border border-error/30 bg-error-container px-4 py-3 text-body-medium text-error">
           <AlertCircle size={18} aria-hidden="true" />
           {error}
         </div>
@@ -121,7 +121,7 @@ export function DashboardPage() {
         eyebrow="Requer ação"
         title="Ordens que precisam de atenção"
         action={
-          <Link to="/ordens" className="flex items-center gap-1 text-sm font-medium text-brand-700 hover:underline">
+          <Link to="/ordens" className="inline-flex min-h-10 items-center gap-1 text-label-large text-primary touch-target hover:underline">
             Ver todas <ArrowRight size={14} aria-hidden="true" />
           </Link>
         }
@@ -141,39 +141,39 @@ export function DashboardPage() {
           </div>
         ) : (
           <div className="table-scroll">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
+            <table className="w-full text-left text-body-medium">
+              <thead className="border-b border-outline-variant text-label-medium text-on-surface-variant">
                 <tr>
-                  <th scope="col" className="px-5 py-2.5">OS</th>
-                  <th scope="col" className="px-5 py-2.5">Cliente / Veículo</th>
-                  <th scope="col" className="px-5 py-2.5">Status</th>
-                  <th scope="col" className="px-5 py-2.5">Situação</th>
+                  <th scope="col" className="px-5 py-3">OS</th>
+                  <th scope="col" className="px-5 py-3">Cliente / Veículo</th>
+                  <th scope="col" className="px-5 py-3">Status</th>
+                  <th scope="col" className="px-5 py-3">Situação</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-outline-variant">
                 {attentionOrders.map((wo) => {
                   const overdueDays = getOverdueDays(wo);
                   return (
-                    <tr key={wo.id} className="hover:bg-slate-50">
-                      <td className="px-5 py-2.5">
-                        <Link to={`/ordens/${wo.id}`} className="font-mono text-xs font-semibold text-slate-700 hover:underline">
+                    <tr key={wo.id} className="hover:bg-surface-container-high">
+                      <td className="px-5 py-3">
+                        <Link to={`/ordens/${wo.id}`} className="font-mono text-body-small font-medium text-on-surface touch-target hover:underline">
                           OS-{String(wo.number).padStart(4, '0')}
                         </Link>
                       </td>
-                      <td className="px-5 py-2.5 text-slate-600">
-                        <p className="font-medium text-slate-700">{'name' in wo.client ? wo.client.name : ''}</p>
-                        <p className="text-xs text-slate-500">{'plate' in wo.vehicle ? wo.vehicle.plate : ''}</p>
+                      <td className="px-5 py-3 text-on-surface-variant">
+                        <p className="font-medium text-on-surface">{'name' in wo.client ? wo.client.name : ''}</p>
+                        <p className="text-body-small text-on-surface-variant">{'plate' in wo.vehicle ? wo.vehicle.plate : ''}</p>
                       </td>
-                      <td className="px-5 py-2.5">
+                      <td className="px-5 py-3">
                         <StatusBadge status={wo.status} compact />
                       </td>
-                      <td className="px-5 py-2.5">
+                      <td className="px-5 py-3">
                         {overdueDays > 0 ? (
-                          <span className="text-xs font-semibold text-status-danger">
+                          <span className="text-body-small font-medium text-error">
                             {overdueDays} {overdueDays === 1 ? 'dia' : 'dias'} de atraso
                           </span>
                         ) : (
-                          <span className="text-xs text-status-warning">Aguardando aprovação do cliente</span>
+                          <span className="text-body-small text-warning">Aguardando aprovação do cliente</span>
                         )}
                       </td>
                     </tr>
@@ -288,20 +288,20 @@ export function DashboardPage() {
               <Skeleton className="h-48" />
             </div>
           ) : summary && summary.upcomingDeliveries.length > 0 ? (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-outline-variant">
               {summary.upcomingDeliveries.map((item) => (
                 <li key={item.id}>
                   <Link
                     to={`/ordens/${item.id}`}
-                    className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-slate-50"
+                    className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-surface-container-high"
                   >
                     <div>
-                      <p className="font-mono text-xs font-semibold text-slate-700">
+                      <p className="font-mono text-body-small font-medium text-on-surface">
                         OS-{String(item.number).padStart(4, '0')}
                       </p>
-                      <p className="text-sm text-slate-600">{item.vehicle} · {item.plate}</p>
+                      <p className="text-body-medium text-on-surface-variant">{item.vehicle} · {item.plate}</p>
                     </div>
-                    <span className="tabular whitespace-nowrap text-sm text-slate-600">
+                    <span className="tabular whitespace-nowrap text-body-medium text-on-surface-variant">
                       <span className="sr-only">Previsão de entrega:</span>
                       {formatDate(item.estimatedDelivery)}
                     </span>

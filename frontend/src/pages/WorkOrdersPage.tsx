@@ -65,14 +65,14 @@ export function WorkOrdersPage() {
           <label htmlFor="wo-search" className="sr-only">
             Buscar por placa ou cliente
           </label>
-          <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={20} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" aria-hidden="true" />
           <input
             id="wo-search"
             type="search"
             placeholder="Buscar por placa ou cliente"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="min-h-[40px] w-full rounded border border-slate-300 py-2 pl-9 pr-3 text-sm focus:border-brand-600"
+            className="min-h-12 w-full rounded-full border border-outline bg-surface py-2 pl-12 pr-4 text-body-large focus:border-primary"
           />
         </div>
         <div className="max-w-xs">
@@ -83,7 +83,7 @@ export function WorkOrdersPage() {
             id="wo-status"
             value={status}
             onChange={(e) => setStatus(e.target.value as WorkOrderStatus | '')}
-            className="min-h-[40px] w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm focus:border-brand-600"
+            className="min-h-12 w-full rounded-full border border-outline bg-surface px-4 py-2 text-body-large focus:border-primary"
           >
             <option value="">Todos os status</option>
             {Object.entries(STATUS_LABELS).map(([value, label]) => (
@@ -96,7 +96,7 @@ export function WorkOrdersPage() {
       </Card>
 
       {error && (
-        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
+        <div role="alert" className="mb-4 flex items-center gap-2 rounded border border-error/30 bg-error-container px-4 py-3 text-body-medium text-error">
           <AlertCircle size={18} aria-hidden="true" />
           {error}
         </div>
@@ -120,8 +120,8 @@ export function WorkOrdersPage() {
           />
         ) : (
           <div className="table-scroll">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
+            <table className="w-full text-left text-body-medium">
+              <thead className="border-b border-outline-variant text-label-medium text-on-surface-variant">
                 <tr>
                   <th scope="col" className="px-5 py-3">OS</th>
                   <th scope="col" className="px-5 py-3">Cliente / Veículo</th>
@@ -131,19 +131,19 @@ export function WorkOrdersPage() {
                   <th scope="col" className="px-5 py-3 text-right">Total</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-outline-variant">
                 {workOrders.map((wo) => {
                   const overdue = isWorkOrderOverdue(wo);
                   return (
-                    <tr key={wo.id} className={`hover:bg-slate-50 ${overdue ? 'bg-status-danger-soft/40' : ''}`}>
+                    <tr key={wo.id} className={`hover:bg-surface-container-high ${overdue ? 'bg-error-container/40' : ''}`}>
                       <td className="px-5 py-3">
-                        <Link to={`/ordens/${wo.id}`} className="font-mono text-xs font-semibold text-slate-700 hover:underline">
+                        <Link to={`/ordens/${wo.id}`} className="font-mono text-body-small font-medium text-on-surface touch-target hover:underline">
                           OS-{String(wo.number).padStart(4, '0')}
                         </Link>
                       </td>
-                      <td className="px-5 py-3 text-slate-600">
-                        <p className="font-medium text-slate-700">{'name' in wo.client ? wo.client.name : ''}</p>
-                        <p className="text-xs text-slate-500">
+                      <td className="px-5 py-3 text-on-surface-variant">
+                        <p className="font-medium text-on-surface">{'name' in wo.client ? wo.client.name : ''}</p>
+                        <p className="text-body-small text-on-surface-variant">
                           {'plate' in wo.vehicle ? wo.vehicle.plate : ''}
                           {'brand' in wo.vehicle ? ` · ${wo.vehicle.brand} ${wo.vehicle.model}` : ''}
                         </p>
@@ -151,16 +151,16 @@ export function WorkOrdersPage() {
                       <td className="px-5 py-3">
                         <StatusBadge status={wo.status} />
                       </td>
-                      <td className="px-5 py-3 tabular text-slate-600">{formatDate(wo.entryDate)}</td>
+                      <td className="px-5 py-3 tabular text-on-surface-variant">{formatDate(wo.entryDate)}</td>
                       <td className="px-5 py-3">
-                        <span className="tabular text-slate-600">{formatDate(wo.estimatedDelivery)}</span>
+                        <span className="tabular text-on-surface-variant">{formatDate(wo.estimatedDelivery)}</span>
                         {overdue && (
-                          <span className="ml-2 text-xs font-semibold text-status-danger">
+                          <span className="ml-2 text-body-small font-medium text-error">
                             {getOverdueDays(wo)}d atraso
                           </span>
                         )}
                       </td>
-                      <td className="tabular px-5 py-3 text-right font-medium text-slate-800">
+                      <td className="tabular px-5 py-3 text-right font-medium text-on-surface">
                         {formatCurrency(wo.totals.total)}
                       </td>
                     </tr>

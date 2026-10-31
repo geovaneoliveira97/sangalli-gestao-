@@ -32,30 +32,30 @@ export const STATUS_TONE: Record<WorkOrderStatus, StatusTone> = {
 };
 
 export const TONE_CLASSES: Record<StatusTone, { text: string; border: string; bg: string; dot: string }> = {
-  info: { text: 'text-status-info', border: 'border-status-info/30', bg: 'bg-status-info-soft', dot: 'bg-status-info' },
+  info: { text: 'text-secondary', border: 'border-secondary/30', bg: 'bg-secondary-container', dot: 'bg-secondary' },
   warning: {
-    text: 'text-status-warning',
-    border: 'border-status-warning/40',
-    bg: 'bg-status-warning-soft',
-    dot: 'bg-status-warning',
+    text: 'text-warning',
+    border: 'border-warning/40',
+    bg: 'bg-warning-container',
+    dot: 'bg-warning',
   },
   success: {
-    text: 'text-status-success',
-    border: 'border-status-success/30',
-    bg: 'bg-status-success-soft',
-    dot: 'bg-status-success',
+    text: 'text-success',
+    border: 'border-success/30',
+    bg: 'bg-success-container',
+    dot: 'bg-success',
   },
   danger: {
-    text: 'text-status-danger',
-    border: 'border-status-danger/30',
-    bg: 'bg-status-danger-soft',
-    dot: 'bg-status-danger',
+    text: 'text-error',
+    border: 'border-error/30',
+    bg: 'bg-error-container',
+    dot: 'bg-error',
   },
   neutral: {
-    text: 'text-slate-600',
-    border: 'border-slate-300',
-    bg: 'bg-slate-100',
-    dot: 'bg-slate-400',
+    text: 'text-on-surface-variant',
+    border: 'border-outline',
+    bg: 'bg-surface-container-high',
+    dot: 'bg-outline',
   },
 };
 

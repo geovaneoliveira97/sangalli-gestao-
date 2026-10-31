@@ -23,11 +23,10 @@ const ICONS: Record<ToastType, typeof CheckCircle2> = {
 };
 
 const STYLES: Record<ToastType, string> = {
-  success: 'bg-status-success text-white',
-  error: 'bg-status-danger text-white',
-  info: 'bg-slate-800 text-white',
-  // `status-warning` com texto branco não atinge o contraste mínimo do WCAG.
-  warning: 'bg-brand-700 text-white',
+  success: 'bg-success text-on-success',
+  error: 'bg-error text-on-error',
+  info: 'bg-on-surface text-surface',
+  warning: 'bg-warning text-on-warning',
 };
 
 let nextId = 1;
@@ -64,17 +63,17 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             <div
               key={toast.id}
               role="status"
-              className={`flex items-start gap-3 rounded px-4 py-3 shadow-flyout ${STYLES[toast.type]}`}
+              className={`flex items-center gap-3 rounded py-1 pl-4 pr-1 shadow-flyout ${STYLES[toast.type]}`}
             >
-              <Icon size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
-              <p className="flex-1 text-sm">{toast.message}</p>
+              <Icon size={20} className="shrink-0" aria-hidden="true" />
+              <p className="flex-1 text-body-medium">{toast.message}</p>
               <button
                 type="button"
                 onClick={() => removeToast(toast.id)}
                 aria-label="Fechar notificação"
-                className="shrink-0 rounded p-0.5 hover:bg-white/20"
+                className="icon-button text-current hover:bg-surface/20"
               >
-                <X size={16} />
+                <X size={20} aria-hidden="true" />
               </button>
             </div>
           );

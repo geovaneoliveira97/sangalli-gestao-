@@ -10,7 +10,7 @@ export function AppLayout() {
 
   return (
     <LowStockProvider>
-      <div className="flex min-h-screen bg-slate-50">
+      <div className="flex min-h-screen bg-surface">
         <a href="#main-content" className="skip-link">
           Pular para o conteúdo principal
         </a>

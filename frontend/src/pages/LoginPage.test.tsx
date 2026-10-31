@@ -60,4 +60,59 @@ describe('LoginPage', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent(/e-mail ou senha inválidos/i);
   });
+
+  it('avança do e-mail para a senha com Enter, sem enviar o formulário', async () => {
+    const user = userEvent.setup();
+    renderLoginPage();
+
+    await user.type(screen.getByLabelText(/e-mail/i), 'admin@autocontrol.com.br{Enter}');
+
+    expect(screen.getByLabelText(/senha/i)).toHaveFocus();
+    expect(authService.login).not.toHaveBeenCalled();
+  });
+
+  it('envia o formulário com Enter no campo de senha', async () => {
+    vi.mocked(authService.login).mockResolvedValue({
+      token: 'fake-jwt-token',
+      user: { id: '1', name: 'Ana Paula Ferreira', email: 'admin@autocontrol.com.br', role: 'ADMIN', active: true },
+    });
+
+    const user = userEvent.setup();
+    renderLoginPage();
+
+    await user.type(screen.getByLabelText(/e-mail/i), 'admin@autocontrol.com.br{Enter}');
+    await user.keyboard('123456{Enter}');
+
+    await waitFor(() => {
+      expect(authService.login).toHaveBeenCalledWith('admin@autocontrol.com.br', '123456');
+    });
+  });
+
+  it('mostra e oculta a senha sem enviar o formulário', async () => {
+    const user = userEvent.setup();
+    renderLoginPage();
+
+    const password = screen.getByLabelText(/senha/i);
+    const toggle = screen.getByRole('button', { name: /mostrar senha/i });
+    expect(password).toHaveAttribute('type', 'password');
+
+    await user.click(toggle);
+    expect(password).toHaveAttribute('type', 'text');
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
+
+    await user.click(toggle);
+    expect(password).toHaveAttribute('type', 'password');
+    expect(authService.login).not.toHaveBeenCalled();
+  });
+
+  it('bloqueia o envio repetido enquanto a requisição está em andamento', async () => {
+    vi.mocked(authService.login).mockReturnValue(new Promise(() => {}));
+
+    const user = userEvent.setup();
+    renderLoginPage();
+
+    await user.click(screen.getByRole('button', { name: /entrar/i }));
+
+    expect(await screen.findByRole('button', { name: /entrar/i })).toBeDisabled();
+  });
 });

@@ -40,14 +40,14 @@ export function QrCodeCard({ workOrderId, workOrderNumber, publicToken }: QrCode
   return (
     <Card className="p-5 text-center">
       <p className="eyebrow">Acompanhamento do cliente</p>
-      <h2 className="mb-1 text-sm font-semibold text-slate-900">Acompanhe seu veículo</h2>
-      <p className="mb-4 text-sm text-slate-500">Escaneie com a câmera do celular.</p>
+      <h2 className="mb-1 text-title-medium text-on-surface">Acompanhe seu veículo</h2>
+      <p className="mb-4 text-body-medium text-on-surface-variant">Escaneie com a câmera do celular.</p>
 
-      <div className="mx-auto mb-4 flex h-44 w-44 items-center justify-center rounded-lg border border-slate-200 bg-white p-2">
+      <div className="mx-auto mb-4 flex h-44 w-44 items-center justify-center rounded-lg border border-outline-variant bg-surface p-2">
         {imageUrl ? (
           <img src={imageUrl} alt={`QR Code de acompanhamento da ordem de serviço número ${workOrderNumber}`} className="h-full w-full" />
         ) : (
-          <QrCodeIcon size={40} className="text-slate-300" aria-hidden="true" />
+          <QrCodeIcon size={40} className="text-outline" aria-hidden="true" />
         )}
       </div>
 
@@ -59,11 +59,11 @@ export function QrCodeCard({ workOrderId, workOrderNumber, publicToken }: QrCode
           href={trackingPath}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center justify-center gap-1.5 text-sm font-medium text-brand-700 hover:underline"
+          className="inline-flex items-center justify-center gap-2 text-body-medium font-medium text-primary touch-target hover:underline"
         >
           <ExternalLink size={14} /> Abrir página pública
         </a>
-        <p className="break-all font-mono text-xs text-slate-400">{trackingUrl}</p>
+        <p className="break-all font-mono text-body-small text-on-surface-variant">{trackingUrl}</p>
       </div>
     </Card>
   );

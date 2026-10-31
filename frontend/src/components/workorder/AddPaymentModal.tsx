@@ -49,8 +49,8 @@ export function AddPaymentModal({ isOpen, remaining, onClose, onAdd }: AddPaymen
   return (
     <Modal title="Registrar pagamento" isOpen={isOpen} onClose={onClose} size="sm">
       <div className="space-y-4">
-        <p className="text-sm text-slate-500">
-          Saldo restante: <span className="font-semibold text-slate-800">{formatCurrency(remaining)}</span>
+        <p className="text-body-medium text-on-surface-variant">
+          Saldo restante: <span className="font-medium text-on-surface">{formatCurrency(remaining)}</span>
         </p>
         <Input
           label="Valor (R$)"
@@ -70,7 +70,7 @@ export function AddPaymentModal({ isOpen, remaining, onClose, onAdd }: AddPaymen
           ))}
         </Select>
         <Input label="Observação (opcional)" value={notes} onChange={(e) => setNotes(e.target.value)} />
-        <div className="flex justify-end gap-3 border-t border-slate-200 pt-4">
+        <div className="flex justify-end gap-3 border-t border-outline-variant pt-4">
           <Button type="button" variant="secondary" onClick={onClose}>
             Cancelar
           </Button>

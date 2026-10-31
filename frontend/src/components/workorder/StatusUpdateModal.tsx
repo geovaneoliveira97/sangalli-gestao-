@@ -56,7 +56,7 @@ export function StatusUpdateModal({ isOpen, currentStatus, onClose, onUpdate }: 
           onChange={(e) => setNote(e.target.value)}
           placeholder="Ex.: Peça aguardando chegada do fornecedor."
         />
-        <div className="flex justify-end gap-3 border-t border-slate-200 pt-4">
+        <div className="flex justify-end gap-3 border-t border-outline-variant pt-4">
           <Button type="button" variant="secondary" onClick={onClose}>
             Cancelar
           </Button>

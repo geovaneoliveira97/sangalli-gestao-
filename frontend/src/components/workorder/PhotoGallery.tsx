@@ -14,9 +14,9 @@ const CATEGORIES: PhotoCategory[] = ['ENTRADA', 'DURANTE', 'FINALIZACAO'];
 export function PhotoGallery({ photos, canManage, onDelete }: PhotoGalleryProps) {
   if (photos.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded border border-dashed border-slate-300 py-10 text-center">
-        <Camera size={28} className="mb-2 text-slate-300" aria-hidden="true" />
-        <p className="text-sm text-slate-500">Nenhuma foto adicionada ainda.</p>
+      <div className="flex flex-col items-center justify-center rounded border border-dashed border-outline py-12 text-center">
+        <Camera size={28} className="mb-2 text-outline" aria-hidden="true" />
+        <p className="text-body-medium text-on-surface-variant">Nenhuma foto adicionada ainda.</p>
       </div>
     );
   }
@@ -31,7 +31,7 @@ export function PhotoGallery({ photos, canManage, onDelete }: PhotoGalleryProps)
             <p className="eyebrow mb-2">{PHOTO_CATEGORY_LABELS[category]}</p>
             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
               {items.map((photo) => (
-                <li key={photo.id} className="group relative overflow-hidden rounded border border-slate-200">
+                <li key={photo.id} className="group relative overflow-hidden rounded border border-outline-variant">
                   <img
                     src={photo.url}
                     alt={photo.caption || `Foto da categoria ${PHOTO_CATEGORY_LABELS[category]}`}
@@ -39,16 +39,16 @@ export function PhotoGallery({ photos, canManage, onDelete }: PhotoGalleryProps)
                     loading="lazy"
                   />
                   {photo.caption && (
-                    <p className="truncate bg-white px-2 py-1 text-xs text-slate-600">{photo.caption}</p>
+                    <p className="truncate bg-surface px-2 py-1 text-body-small text-on-surface-variant">{photo.caption}</p>
                   )}
                   {canManage && (
                     <button
                       type="button"
                       onClick={() => onDelete(photo.id)}
                       aria-label="Excluir foto"
-                      className="absolute right-1.5 top-1.5 rounded-full bg-white/90 p-1.5 text-status-danger opacity-0 shadow transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+                      className="icon-button absolute right-1 top-1 bg-surface/90 text-error opacity-0 transition-opacity hover:bg-surface group-hover:opacity-100 focus-visible:opacity-100"
                     >
-                      <Trash2 size={14} />
+                      <Trash2 size={20} aria-hidden="true" />
                     </button>
                   )}
                 </li>

@@ -40,7 +40,7 @@ export function WhatsAppButton({ workOrder, clientName, clientPhone }: WhatsAppB
   }
 
   return (
-    <Button variant="secondary" onClick={handleClick} className="border-emerald-300 text-emerald-700 hover:bg-emerald-50">
+    <Button variant="success" onClick={handleClick}>
       <MessageCircle size={18} /> Enviar atualização pelo WhatsApp
     </Button>
   );

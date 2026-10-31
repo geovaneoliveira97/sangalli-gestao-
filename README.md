@@ -66,12 +66,12 @@ próprio veículo em tempo real, sem precisar criar conta ou ligar para a oficin
   realizados) e lista de próximas entregas.
 - **Relatórios** com filtros por período/status e indicadores (faturamento, ticket médio, tempo
   médio de serviço, veículos atendidos, novos clientes).
-- Interface **responsiva**, com **acessibilidade** (labels, foco visível, aria-labels, status
+- Interface em **Material Design 3** (tema claro em branco e azul) **responsiva**, com **acessibilidade** (labels, foco visível, aria-labels, status
   nunca indicado só por cor) e **PWA** instalável.
 
 ## Tecnologias
 
-**Frontend:** React 18, TypeScript, Vite, Tailwind CSS, React Router, Lucide React, Recharts,
+**Frontend:** React 18, TypeScript, Vite, Tailwind CSS (tema Material Design 3), React Router, Lucide React, Recharts,
 Axios, vite-plugin-pwa, Vitest + React Testing Library.
 
 **Backend:** Node.js, Express, TypeScript, Prisma ORM, JWT (jsonwebtoken), bcrypt, Zod, Helmet,
@@ -181,6 +181,7 @@ autocontrol/
 │   │   ├── services/     Chamadas à API (axios) e à API externa ViaCEP
 │   │   ├── hooks/        useAuth, useToast
 │   │   ├── contexts/     AuthContext, ToastContext
+│   │   ├── theme/        Tokens do Material Design 3 (cores e tipografia)
 │   │   ├── types/        Tipos TypeScript compartilhados
 │   │   └── utils/        Formatação, labels de status, paleta de gráficos
 │   └── public/           manifest.json, ícones do PWA
@@ -356,7 +357,7 @@ npm run preview     # serve o build localmente para conferência
 | **JavaScript / TypeScript**  | Todo o projeto (frontend e backend) é escrito em TypeScript com tipagem estrita. |
 | **Computação em nuvem**      | Banco de dados no Supabase (já em uso); deploy planejado do frontend no Netlify, do backend no Render, e imagens no Cloudinary. |
 | **Uso de API externa**       | Integração com a **API ViaCEP** para preenchimento automático de endereço a partir do CEP (`frontend/src/services/cepService.ts`), com tratamento de CEP inválido, não encontrado e indisponibilidade. |
-| **Acessibilidade**           | HTML semântico, labels em todos os campos, `aria-label`/`aria-describedby`, foco visível, navegação por teclado, contraste adequado, status sempre com ícone + texto (nunca só cor), alvos de toque de pelo menos 32–40px (adequados ao uso profissional denso, dentro do recomendado pelo WCAG). |
+| **Acessibilidade**           | HTML semântico, labels em todos os campos, `aria-label`/`aria-describedby`, foco visível, navegação por teclado, contraste adequado, status sempre com ícone + texto (nunca só cor), alvos de toque de 48px e contraste mínimo de 4,5:1 nos pares de cor do tema. |
 | **Controle de versão**       | Git, com histórico de commits incrementais documentando a evolução do projeto (ver `git log`). |
 | **Testes automatizados**     | Backend: Vitest + Supertest (`backend/tests/`). Frontend: Vitest + React Testing Library (arquivos `*.test.ts(x)` em `frontend/src/`). |
 | **Análise de dados**         | Dashboard e página de Relatórios com indicadores (faturamento, ticket médio, tempo médio de serviço) e gráficos (Recharts): faturamento mensal, OS por status, serviços mais realizados. |

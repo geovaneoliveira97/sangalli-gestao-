@@ -6,15 +6,15 @@
 export function PageLoader() {
   return (
     <div className="flex min-h-[40vh] items-center justify-center" role="status" aria-label="Carregando página">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-brand-600" />
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-outline-variant border-t-primary" />
     </div>
   );
 }
 
 export function FullScreenLoader() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50" role="status" aria-label="Carregando">
-      <div className="h-9 w-9 animate-spin rounded-full border-4 border-slate-200 border-t-brand-600" />
+    <div className="flex min-h-screen items-center justify-center bg-surface" role="status" aria-label="Carregando">
+      <div className="h-9 w-9 animate-spin rounded-full border-4 border-outline-variant border-t-primary" />
     </div>
   );
 }

@@ -60,9 +60,9 @@ export function PhotoUploadModal({ isOpen, onClose, onUpload }: PhotoUploadModal
   return (
     <Modal title="Adicionar foto" isOpen={isOpen} onClose={onClose} size="sm">
       <div className="space-y-4">
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="photo-file" className="text-sm font-medium text-slate-700">
-            Arquivo de imagem <span className="text-status-danger">*</span>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="photo-file" className="text-body-medium font-medium text-on-surface">
+            Arquivo de imagem <span className="text-error">*</span>
           </label>
           <input
             id="photo-file"
@@ -70,13 +70,13 @@ export function PhotoUploadModal({ isOpen, onClose, onUpload }: PhotoUploadModal
             accept="image/jpeg,image/png,image/webp"
             onChange={handleFileChange}
             aria-describedby={error ? 'photo-file-error' : 'photo-file-hint'}
-            className="text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-brand-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-brand-700"
+            className="text-body-medium file:mr-3 file:min-h-10 file:rounded-full file:border-0 file:bg-primary-container file:px-4 file:text-label-large file:text-on-primary-container"
           />
-          <p id="photo-file-hint" className="text-xs text-slate-500">
+          <p id="photo-file-hint" className="text-body-small text-on-surface-variant">
             JPG, PNG ou WEBP, até {MAX_SIZE_MB}MB.
           </p>
           {error && (
-            <p id="photo-file-error" role="alert" className="text-xs font-medium text-status-danger">
+            <p id="photo-file-error" role="alert" className="text-body-small font-medium text-error">
               {error}
             </p>
           )}
@@ -92,7 +92,7 @@ export function PhotoUploadModal({ isOpen, onClose, onUpload }: PhotoUploadModal
 
         <Input label="Legenda (opcional)" value={caption} onChange={(e) => setCaption(e.target.value)} />
 
-        <div className="flex justify-end gap-3 border-t border-slate-200 pt-4">
+        <div className="flex justify-end gap-3 border-t border-outline-variant pt-4">
           <Button type="button" variant="secondary" onClick={onClose}>
             Cancelar
           </Button>

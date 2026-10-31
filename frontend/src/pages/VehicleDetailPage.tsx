@@ -40,7 +40,7 @@ export function VehicleDetailPage() {
 
   if (error || !vehicle) {
     return (
-      <div role="alert" className="flex items-center gap-2 rounded border border-status-danger/30 bg-status-danger-soft px-4 py-3 text-sm text-status-danger">
+      <div role="alert" className="flex items-center gap-2 rounded border border-error/30 bg-error-container px-4 py-3 text-body-medium text-error">
         <AlertCircle size={18} aria-hidden="true" />
         {error || 'Veículo não encontrado.'}
       </div>
@@ -54,7 +54,7 @@ export function VehicleDetailPage() {
       <button
         type="button"
         onClick={() => navigate('/veiculos')}
-        className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-brand-700"
+        className="mb-4 inline-flex min-h-12 items-center gap-2 text-label-large text-primary hover:underline"
       >
         <ArrowLeft size={16} /> Voltar para veículos
       </button>
@@ -66,7 +66,7 @@ export function VehicleDetailPage() {
           client ? (
             <>
               <span className="tabular font-mono">{vehicle.plate}</span> · {vehicle.year} · Proprietário:{' '}
-              <Link to={`/clientes/${client.id}`} className="font-medium text-brand-700 hover:underline">
+              <Link to={`/clientes/${client.id}`} className="font-medium text-primary touch-target hover:underline">
                 {client.name}
               </Link>
             </>
@@ -85,18 +85,18 @@ export function VehicleDetailPage() {
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <SectionCard eyebrow="Ficha técnica" title="Dados do veículo" className="lg:col-span-1">
-          <ul className="space-y-3 text-sm text-slate-700">
+          <ul className="space-y-3 text-body-medium text-on-surface">
             <li className="flex items-center gap-2">
-              <Palette size={16} className="text-slate-400" aria-hidden="true" />
+              <Palette size={16} className="text-on-surface-variant" aria-hidden="true" />
               Cor: {vehicle.color}
             </li>
             <li className="flex items-center gap-2">
-              <Gauge size={16} className="text-slate-400" aria-hidden="true" />
+              <Gauge size={16} className="text-on-surface-variant" aria-hidden="true" />
               Quilometragem: <span className="tabular">{vehicle.mileage.toLocaleString('pt-BR')} km</span>
             </li>
           </ul>
           {vehicle.notes && (
-            <div className="mt-4 rounded border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
+            <div className="mt-4 rounded bg-surface p-3 text-body-medium text-on-surface-variant">
               <p className="eyebrow mb-1">Observações</p>
               {vehicle.notes}
             </div>
@@ -113,16 +113,16 @@ export function VehicleDetailPage() {
               />
             </div>
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-outline-variant">
               {vehicle.workOrders.map((wo) => (
                 <li key={wo.id}>
                   <Link
                     to={`/ordens/${wo.id}`}
-                    className="flex flex-col gap-2 px-5 py-3 hover:bg-slate-50 sm:flex-row sm:items-center sm:justify-between"
+                    className="flex flex-col gap-2 px-5 py-3 hover:bg-surface-container-high sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div>
-                      <p className="font-mono text-xs font-semibold text-slate-700">OS-{String(wo.number).padStart(4, '0')}</p>
-                      <p className="tabular text-sm text-slate-500">{formatDate(wo.entryDate)}</p>
+                      <p className="font-mono text-body-small font-medium text-on-surface">OS-{String(wo.number).padStart(4, '0')}</p>
+                      <p className="tabular text-body-medium text-on-surface-variant">{formatDate(wo.entryDate)}</p>
                     </div>
                     <StatusBadge status={wo.status} />
                   </Link>

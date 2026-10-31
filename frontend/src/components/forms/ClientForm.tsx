@@ -122,12 +122,12 @@ export function ClientForm({ initialValues, onSubmit, onCancel }: ClientFormProp
             hint="Preenche automaticamente o endereço (ViaCEP)."
           />
           {cepStatus === 'loading' && (
-            <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
+            <p className="mt-1 flex items-center gap-2 text-body-small text-on-surface-variant">
               <Loader2 size={12} className="animate-spin" /> Buscando endereço...
             </p>
           )}
           {cepStatus === 'error' && (
-            <p role="alert" className="mt-1 flex items-center gap-1.5 text-xs text-status-danger">
+            <p role="alert" className="mt-1 flex items-center gap-2 text-body-small text-error">
               <MapPinOff size={12} /> {cepError}
             </p>
           )}
@@ -160,7 +160,7 @@ export function ClientForm({ initialValues, onSubmit, onCancel }: ClientFormProp
         />
       </fieldset>
 
-      <div className="flex justify-end gap-3 border-t border-slate-200 pt-4">
+      <div className="flex justify-end gap-3 border-t border-outline-variant pt-4">
         <Button type="button" variant="secondary" onClick={onCancel}>
           Cancelar
         </Button>

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Card } from './Card';
 
 interface SectionCardProps {
-  /** Rótulo curto em caixa alta, para dar contexto de bloco (ex.: "CLIENTE"). */
+  /** Rótulo curto acima do título, para dar contexto de bloco (ex.: "Cliente"). */
   eyebrow?: string;
   title: string;
   action?: ReactNode;
@@ -19,14 +19,14 @@ interface SectionCardProps {
 export function SectionCard({ eyebrow, title, action, children, className = '', bodyClassName = '' }: SectionCardProps) {
   return (
     <Card className={className}>
-      <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 sm:px-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 pt-4 sm:px-6">
         <div>
           {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-          <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+          <h2 className="text-title-medium text-on-surface">{title}</h2>
         </div>
-        {action && <div className="flex shrink-0 gap-2">{action}</div>}
+        {action && <div className="flex gap-2">{action}</div>}
       </div>
-      <div className={`p-4 sm:p-5 ${bodyClassName}`}>{children}</div>
+      <div className={`p-4 sm:px-6 ${bodyClassName}`}>{children}</div>
     </Card>
   );
 }
