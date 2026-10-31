@@ -17,14 +17,17 @@ import {
   type PartInput,
 } from '../services/catalogService';
 import { getApiErrorMessage } from '../services/api';
+import { useLowStock } from '../hooks/useLowStock';
 import { useToast } from '../hooks/useToast';
 import { formatCurrency } from '../utils/format';
+import { stockBadgeClass } from '../utils/stock';
 import type { Part } from '../types';
 
 const EMPTY: PartInput = { name: '', code: '', manufacturer: '', price: 0, stock: 0, active: true };
 
 export function PartsPage() {
   const { showToast } = useToast();
+  const { refreshLowStock } = useLowStock();
   const canManage = true;
 
   const [parts, setParts] = useState<Part[]>([]);
@@ -85,6 +88,7 @@ export function PartsPage() {
       }
       setIsModalOpen(false);
       load(search || undefined);
+      refreshLowStock();
     } catch (err) {
       showToast(getApiErrorMessage(err, 'Não foi possível salvar a peça.'), 'error');
     } finally {
@@ -106,6 +110,7 @@ export function PartsPage() {
       );
       setDeleting(null);
       load(search || undefined);
+      refreshLowStock();
     } catch (err) {
       showToast(getApiErrorMessage(err, 'Não foi possível remover a peça.'), 'error');
     } finally {
@@ -182,17 +187,7 @@ export function PartsPage() {
                     <td className="px-5 py-3 font-mono text-xs text-slate-600">{part.code}</td>
                     <td className="tabular px-5 py-3 text-slate-600">{formatCurrency(part.price)}</td>
                     <td className="px-5 py-3">
-                      <Badge
-                        className={
-                          part.stock > 5
-                            ? 'border-status-success/30 bg-status-success-soft text-status-success'
-                            : part.stock > 0
-                              ? 'border-status-warning/40 bg-status-warning-soft text-status-warning'
-                              : 'border-status-danger/30 bg-status-danger-soft text-status-danger'
-                        }
-                      >
-                        {part.stock} un.
-                      </Badge>
+                      <Badge className={stockBadgeClass(part.stock)}>{part.stock} un.</Badge>
                     </td>
                     {canManage && (
                       <td className="px-5 py-3">

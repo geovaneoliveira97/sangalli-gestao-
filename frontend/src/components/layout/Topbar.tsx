@@ -1,5 +1,6 @@
 import { LogOut, Menu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { LowStockBell } from './LowStockBell';
 import { useAuth } from '../../hooks/useAuth';
 import { USER_ROLE_LABELS } from '../../utils/statusLabels';
 
@@ -34,6 +35,7 @@ export function Topbar({ onOpenMobileMenu }: { onOpenMobileMenu: () => void }) {
       <div className="hidden lg:block" />
 
       <div className="flex items-center gap-3">
+        <LowStockBell />
         <div className="flex items-center gap-2.5 border-r border-slate-200 pr-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
             {initials || '—'}

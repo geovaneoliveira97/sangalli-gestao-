@@ -46,3 +46,17 @@
     @apply text-xs font-semibold uppercase tracking-[0.08em] text-slate-500;
   }
 }
+
+/* Documento de impressão (ex.: orçamento): quando existe um `.print-root`, ele
+   é a única coisa impressa — sem sidebar, topbar nem widgets. Nas demais
+   páginas a impressão segue o comportamento normal do navegador. */
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+
+  body:has(> .print-root) > :not(.print-root) {
+    display: none !important;
+  }
+}

@@ -51,8 +51,12 @@ próprio veículo em tempo real, sem precisar criar conta ou ligar para a oficin
 - **Linha do tempo (timeline)** de cada ordem de serviço, com todo o histórico de mudanças de
   status, usuário responsável e data/hora.
 - Catálogo de **serviços** e **peças**, com estoque e valores.
+- **Alerta de estoque baixo** (até 5 unidades): notificação na tela e sino na barra superior com
+  a lista das peças ativas que precisam de reposição.
 - **Cálculo automático de orçamento** (serviços + peças + mão de obra = total), com registro de
   pagamentos parciais e saldo restante.
+- **Impressão do orçamento** em layout A4 próprio, que também pode ser salvo em PDF pelo diálogo
+  de impressão do navegador, sem observações internas nem CPF do cliente.
 - **Upload de fotos** do veículo (entrada, durante o serviço, finalização) via **Cloudinary**.
 - **Página pública de acompanhamento** (`/acompanhar/:token`) — sem login — com status, timeline,
   fotos, serviços, peças e valores, escondendo informações internas da oficina.
@@ -312,8 +316,9 @@ npm test
 ```
 
 Cobrem: login, cadastro de cliente (incluindo integração com ViaCEP), cadastro de veículo,
-criação de ordem de serviço, cálculo/exibição de orçamento, atualização de status, exibição da
-timeline e a página pública de acompanhamento.
+criação de ordem de serviço, cálculo/exibição de orçamento, documento de impressão do orçamento,
+alerta de estoque baixo, atualização de status, exibição da timeline e a página pública de
+acompanhamento.
 
 ## Build de produção
 

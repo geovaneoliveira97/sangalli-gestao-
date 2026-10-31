@@ -1,7 +1,7 @@
 import { createContext, useCallback, useMemo, useState, type ReactNode } from 'react';
-import { CheckCircle2, XCircle, Info, X } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, XCircle, Info, X } from 'lucide-react';
 
-export type ToastType = 'success' | 'error' | 'info';
+export type ToastType = 'success' | 'error' | 'info' | 'warning';
 
 interface Toast {
   id: number;
@@ -19,12 +19,15 @@ const ICONS: Record<ToastType, typeof CheckCircle2> = {
   success: CheckCircle2,
   error: XCircle,
   info: Info,
+  warning: AlertTriangle,
 };
 
 const STYLES: Record<ToastType, string> = {
   success: 'bg-status-success text-white',
   error: 'bg-status-danger text-white',
   info: 'bg-slate-800 text-white',
+  // `status-warning` com texto branco não atinge o contraste mínimo do WCAG.
+  warning: 'bg-brand-700 text-white',
 };
 
 let nextId = 1;

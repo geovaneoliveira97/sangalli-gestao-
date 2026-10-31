@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, AlertCircle, AlertTriangle, Plus, Trash2, Wallet, RefreshCw, Save } from 'lucide-react';
+import { ArrowLeft, AlertCircle, AlertTriangle, Plus, Printer, Trash2, Wallet, RefreshCw, Save } from 'lucide-react';
 import { PageHeader } from '../components/ui/PageHeader';
 import { SectionCard } from '../components/ui/SectionCard';
 import { Button } from '../components/ui/Button';
@@ -10,6 +10,7 @@ import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { StatusBadge } from '../components/StatusBadge';
 import { Timeline } from '../components/workorder/Timeline';
 import { BudgetCard } from '../components/workorder/BudgetCard';
+import { BudgetPrintView } from '../components/workorder/BudgetPrintView';
 import { PhotoGallery } from '../components/workorder/PhotoGallery';
 import { QrCodeCard } from '../components/workorder/QrCodeCard';
 import { WhatsAppButton } from '../components/workorder/WhatsAppButton';
@@ -145,6 +146,8 @@ export function WorkOrderDetailPage() {
     color?: string;
   };
   const overdue = isWorkOrderOverdue(workOrder);
+  const hasBudgetItems =
+    workOrder.services.length > 0 || workOrder.parts.length > 0 || Number(workOrder.laborCost) > 0;
 
   return (
     <div>
@@ -262,6 +265,15 @@ export function WorkOrderDetailPage() {
             action={
               canAddServices && (
                 <div className="flex flex-wrap gap-2">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => window.print()}
+                    disabled={!hasBudgetItems}
+                    title={hasBudgetItems ? 'Imprimir ou salvar o orçamento em PDF' : 'Adicione itens ao orçamento'}
+                  >
+                    <Printer size={14} /> Imprimir / PDF
+                  </Button>
                   <Button size="sm" variant="secondary" onClick={() => setOpenModal('service')}>
                     <Plus size={14} /> Serviço
                   </Button>
@@ -407,6 +419,7 @@ export function WorkOrderDetailPage() {
         onConfirm={handleDeleteWorkOrder}
         onCancel={() => setOpenModal(null)}
       />
+      {hasBudgetItems && <BudgetPrintView workOrder={workOrder} />}
     </div>
   );
 }
