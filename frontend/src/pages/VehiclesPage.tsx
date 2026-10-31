@@ -111,14 +111,14 @@ export function VehiclesPage() {
           Buscar veículos
         </label>
         <div className="relative">
-          <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
+          <Search size={20} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" aria-hidden="true" />
           <input
             id="vehicle-search"
             type="search"
             placeholder="Buscar por placa, marca ou modelo"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="min-h-12 w-full rounded border border-outline py-2 pl-9 pr-3 text-body-medium focus:border-primary"
+            className="min-h-12 w-full rounded-full border border-outline bg-surface py-2 pl-12 pr-4 text-body-large focus:border-primary"
           />
         </div>
       </Card>
