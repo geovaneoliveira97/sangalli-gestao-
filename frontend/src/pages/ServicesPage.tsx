@@ -62,7 +62,8 @@ export function ServicesPage() {
 
   function openEdit(service: Service) {
     setEditing(service);
-    setValues(service);
+    // A API devolve campos Decimal como string, e a validação exige número.
+    setValues({ ...service, defaultPrice: Number(service.defaultPrice) });
     setIsModalOpen(true);
   }
 

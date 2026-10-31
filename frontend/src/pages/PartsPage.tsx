@@ -71,7 +71,8 @@ export function PartsPage() {
 
   function openEdit(part: Part) {
     setEditing(part);
-    setValues(part);
+    // A API devolve campos Decimal como string, e a validação exige número.
+    setValues({ ...part, price: Number(part.price) });
     setIsModalOpen(true);
   }
 
